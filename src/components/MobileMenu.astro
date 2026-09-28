@@ -1,0 +1,133 @@
+---
+/*
+ * Full-screen menu below 1024px. It is a modal <dialog>: focus moves to Close
+ * and is trapped inside, Esc closes it, focus returns to the Menu button and
+ * the page behind can't scroll (see scripts/site.ts).
+ */
+import { links, site } from '../content/site';
+import { navItems } from '../content/sections';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+---
+
+<dialog id="mobile-menu" class="mobile-menu" aria-label={site.header.menu} data-menu>
+  <div class="mobile-menu__top">
+    <Logo size="menu" />
+    <button type="button" class="mobile-menu__close" data-menu-close>
+      {site.header.close}
+      <Icon name="close" size={18} strokeWidth={2} />
+    </button>
+  </div>
+  <nav class="mobile-menu__nav">
+    <ul class="mobile-menu__links">
+      {navItems.map((item) => (
+        <li>
+          <a class="mobile-menu__link" href={item.href} data-nav-link={item.id}>
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <div class="mobile-menu__bottom">
+    <Button href={links.remlo} external fullOnMobile>
+      {site.header.exploreRemlo}
+    </Button>
+  </div>
+</dialog>
+
+<style>
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--ff-white);
+    color: var(--ff-ink);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-menu[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu::backdrop {
+    background: var(--ff-white);
+  }
+
+  .mobile-menu__top {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--ff-header-h);
+    padding: 0 12px 0 var(--ff-gutter);
+    border-bottom: 1px solid var(--ff-hairline);
+  }
+
+  .mobile-menu__close {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid var(--ff-ink);
+    border-radius: var(--ff-radius-pill);
+    background: var(--ff-white);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .mobile-menu__nav {
+    flex-grow: 1;
+    padding: 12px var(--ff-gutter);
+  }
+
+  .mobile-menu__links {
+    font-family: var(--ff-font-serif);
+    font-size: 26px;
+    font-weight: 500;
+  }
+
+  .mobile-menu__links li + li {
+    border-top: 1px solid var(--ff-hairline);
+  }
+
+  .mobile-menu__link {
+    display: block;
+    padding: 13px 0;
+    text-decoration: none;
+  }
+
+  .mobile-menu__link:hover,
+  .mobile-menu__link[aria-current='location'] {
+    text-decoration: underline;
+    text-decoration-color: var(--ff-accent-line);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  .mobile-menu__bottom {
+    padding: 16px var(--ff-gutter) 24px;
+  }
+
+  @media (min-width: 640px) {
+    .mobile-menu__top {
+      padding-right: calc(var(--ff-gutter) - 8px);
+    }
+
+    .mobile-menu__bottom :global(.button) {
+      display: flex;
+      width: 100%;
+    }
+  }
+</style>

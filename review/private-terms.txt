@@ -1,0 +1,20 @@
+# Private or unverified terms that must never appear in the built site.
+# One per line; case-insensitive whole-word match.
+LEO
+Krsna
+MWC
+Migrant Workers' Centre
+ambassador
+UWCSEA
+Sembawang
+sps.edu
+10,000
+70+
+86.7
+93.3
+81.8
+It's Raining Raincoats
+Project Nexus
+HealthServe
+SUTD
+Wise

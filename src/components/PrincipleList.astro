@@ -1,0 +1,109 @@
+---
+/*
+ * The numbered principles in "Our approach". An ordered list: the visible
+ * numbers are decorative because the <ol> already conveys the order.
+ * Five columns on desktop, two or three on tablet, stacked on mobile.
+ */
+interface Props {
+  items: readonly { title: string; body: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<ol class="principles">
+  {items.map((item, index) => (
+    <li class="principle">
+      <span class="principle__number" aria-hidden="true">
+        {String(index + 1).padStart(2, '0')}
+      </span>
+      <div class="principle__text">
+        <h3 class="principle__title">{item.title}</h3>
+        <p class="principle__body">{item.body}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .principles {
+    display: grid;
+    gap: 22px;
+  }
+
+  .principle {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ff-line-paper);
+  }
+
+  .principle__number {
+    font-family: var(--ff-font-serif);
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ff-accent-large);
+  }
+
+  .principle__text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .principle__title {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+
+  .principle__body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  @media (min-width: 640px) {
+    .principles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 36px 28px;
+    }
+
+    .principle {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 20px;
+    }
+
+    .principle__number {
+      font-size: 40px;
+    }
+  }
+
+  @media (min-width: 800px) {
+    .principles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .principles {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    .principle__number {
+      font-size: 44px;
+    }
+
+    .principle__text {
+      gap: 12px;
+    }
+
+    .principle__title {
+      font-size: 22px;
+    }
+  }
+</style>

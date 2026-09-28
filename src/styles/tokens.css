@@ -1,0 +1,99 @@
+/*
+ * FinanceForward design tokens — PROVISIONAL v0.1.
+ *
+ * These values are provisional until a confirmed brand source exists.
+ * The gold is sampled from the FinanceForward logo; the Remlo orange comes
+ * from Remlo's own CSS (--brand-primary). Everything else is derived.
+ */
+:root {
+  /* Core */
+  --ff-ink: #16181d;
+  --ff-ink-2: #454a55;
+  --ff-muted: #5b616c;
+  --ff-white: #ffffff;
+  --ff-paper: #f6f3ec;
+  --ff-tile: #efe6d6;
+  --ff-line: #e7e2d7;
+  --ff-line-paper: #dcd5c6;
+  --ff-field: #cfc9bc;
+  --ff-ink-hover: #2a2e37;
+
+  /* Gold (from the logo) */
+  --ff-gold: #b17e30;
+  --ff-gold-large: #94691f;
+  --ff-gold-ink: #7a5a12;
+
+  /* Dark band */
+  --ff-on-dark: #f6f3ec;
+  --ff-on-dark-body: #e4dfd4;
+  --ff-on-dark-2: #c9c3b6;
+  --ff-dark-line: #3a3d45;
+  --ff-gold-on-dark: #d9b45a;
+
+  /* Remlo */
+  --remlo-orange: #e8640c;
+  --remlo-ink: #b04a05;
+  --remlo-ink-hover: #963f04;
+  --remlo-label: #7a3304;
+  --remlo-tint: #fff6ee;
+  --remlo-line: #f0ddcb;
+
+  /*
+   * Accent aliases. To try the old site's navy instead of gold, change only
+   * these four lines, for example:
+   *   --ff-accent-ink: #182544; --ff-accent-line: #3a4c7a;
+   *   --ff-accent-large: #182544; --ff-accent-on-dark: #afc2ea;
+   */
+  --ff-accent-ink: var(--ff-gold-ink);
+  --ff-accent-line: var(--ff-gold);
+  --ff-accent-large: var(--ff-gold-large);
+  --ff-accent-on-dark: var(--ff-gold-on-dark);
+
+  /* Secondary values read from the design exports (not in the token table) */
+  --ff-hairline: #ece8df; /* header border, hero rule, menu rules */
+  --ff-card-ground: #fbfaf7; /* email card */
+  --ff-pressed: #efebe2; /* outline button, pressed */
+  --remlo-chip-line: #f0d9c4; /* language chips */
+  --remlo-field: #e3b999; /* Remlo outline button border, carousel dots */
+  --remlo-rule: #f1e6da; /* boundary list rules */
+
+  /* Type */
+  --ff-font-serif: 'Newsreader', 'Newsreader Fallback', Georgia, 'Times New Roman', serif;
+  --ff-font-sans:
+    'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible Next Fallback', system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+  /* Language names: Latin names keep Atkinson; other scripts use system fonts. */
+  --ff-font-scripts:
+    'Atkinson Hyperlegible Next', system-ui, 'Noto Sans Tamil', 'Noto Sans Devanagari',
+    'Noto Sans Bengali', 'Noto Sans Myanmar', 'Noto Sans Sinhala', 'Noto Sans Thai',
+    'Noto Nastaliq Urdu', 'Noto Sans SC', sans-serif;
+
+  /* Layout */
+  --ff-max: 1200px;
+  --ff-gutter: 20px;
+  --ff-section-y: 64px;
+  --ff-header-h: 64px;
+
+  /* Radii */
+  --ff-radius-card: 20px;
+  --ff-radius-tile: 12px;
+  --ff-radius-pill: 999px;
+
+  /* Motion */
+  --ff-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --ff-gutter: 40px;
+    --ff-section-y: 80px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --ff-section-y: clamp(80px, 7.2vw, 104px);
+    --ff-header-h: 76px;
+    --ff-radius-card: 24px;
+  }
+}

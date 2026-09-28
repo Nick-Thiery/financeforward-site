@@ -1,0 +1,202 @@
+/* Base styles shared by every page. Component styles live in each component. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--ff-header-h);
+  background: var(--ff-white);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+html.is-menu-open {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ff-font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ff-ink);
+  background: var(--ff-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--ff-font-serif);
+  font-weight: 500;
+}
+
+h1,
+h2 {
+  text-wrap: balance;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--ff-ink);
+  outline-offset: 3px;
+}
+
+.on-dark a:focus-visible,
+.on-dark button:focus-visible {
+  outline-color: var(--ff-on-dark);
+}
+
+main:focus {
+  outline: none;
+}
+
+/* Watched by the header script to know when the page has scrolled. */
+.scroll-sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 4px;
+  pointer-events: none;
+}
+
+.container {
+  width: min(var(--ff-max), 100% - 2 * var(--ff-gutter));
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Shared type roles */
+.t-h2 {
+  font-size: 32px;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.t-lead {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ff-ink-2);
+}
+
+.t-body {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ff-ink-2);
+}
+
+.t-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ff-accent-ink);
+}
+
+@media (min-width: 1024px) {
+  .t-h2 {
+    font-size: 44px;
+    line-height: 1.1;
+  }
+
+  .t-lead {
+    font-size: 20px;
+  }
+
+  .t-body {
+    font-size: 18px;
+  }
+
+  .t-label {
+    font-size: 13px;
+  }
+}
+
+/*
+ * Section reveal: sections below the fold fade up 12px over 400ms, once.
+ * The script marks only sections that start off-screen, so nothing visible
+ * is ever hidden, and nothing is hidden without JavaScript.
+ */
+[data-reveal='pending'] {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+[data-reveal='done'] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 400ms var(--ff-ease),
+    transform 400ms var(--ff-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

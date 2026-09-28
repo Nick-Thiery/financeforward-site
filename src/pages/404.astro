@@ -1,0 +1,104 @@
+---
+import Button from '../components/Button.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SkipLink from '../components/SkipLink.astro';
+import { links, site } from '../content/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const copy = site.notFound;
+---
+
+<BaseLayout
+  title={`${copy.title} — ${site.brand.name}`}
+  description={site.meta.description}
+  noindex
+>
+  <SkipLink />
+  <SiteHeader variant="minimal" />
+  <main id="main" tabindex="-1">
+    <section class="not-found" aria-labelledby="not-found-title">
+      <div class="container">
+        <div class="not-found__inner">
+          <h1 id="not-found-title" class="not-found__title">
+            {copy.title}
+          </h1>
+          <p class="not-found__body">{copy.body}</p>
+          <div class="not-found__actions">
+            <Button href="/" fullOnMobile>
+              {copy.home}
+            </Button>
+            <Button href={links.remlo} variant="outline" external fullOnMobile>
+              {copy.exploreRemlo}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="not-found__footer">
+    <p class="container">{site.footer.copyright}</p>
+  </footer>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: 72px 96px;
+  }
+
+  .not-found__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 720px;
+  }
+
+  .not-found__title {
+    font-size: 40px;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+
+  .not-found__body {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ff-ink-2);
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .not-found__footer {
+    padding-block: 28px;
+    border-top: 1px solid var(--ff-line);
+    background: var(--ff-paper);
+    font-size: 14px;
+    color: var(--ff-muted);
+  }
+
+  @media (min-width: 640px) {
+    .not-found__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .not-found {
+      padding-block: 120px 160px;
+    }
+
+    .not-found__title {
+      font-size: 64px;
+      line-height: 1.04;
+    }
+
+    .not-found__body {
+      font-size: 20px;
+    }
+  }
+</style>

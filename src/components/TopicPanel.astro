@@ -1,0 +1,82 @@
+---
+/*
+ * The sessions card's top panel: four topic chips with icons. This is the
+ * finished v1 design; an approved session photo could replace it later.
+ */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  topics: readonly { icon: string; label: string }[];
+}
+
+const { topics } = Astro.props;
+---
+
+<div class="topic-panel">
+  <ul class="topic-panel__list">
+    {topics.map((topic) => (
+      <li class="topic">
+        <Icon name={topic.icon as IconName} size={20} strokeWidth={1.9} tone="accent" />
+        <span>{topic.label}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .topic-panel {
+    display: flex;
+    align-items: center;
+    padding: 22px 18px;
+    background: var(--ff-paper);
+  }
+
+  .topic-panel__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+
+  .topic {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 12px;
+    border: 1px solid var(--ff-line);
+    border-radius: var(--ff-radius-tile);
+    background: var(--ff-white);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  @media (min-width: 640px) {
+    .topic-panel {
+      padding: 32px;
+    }
+
+    .topic {
+      gap: 12px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      font-size: 16px;
+    }
+
+    .topic :global(.icon) {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .topic-panel {
+      height: 236px;
+      padding: 36px;
+    }
+
+    .topic-panel__list {
+      gap: 12px;
+    }
+  }
+</style>

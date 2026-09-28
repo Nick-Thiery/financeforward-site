@@ -1,0 +1,116 @@
+---
+/*
+ * Underlined text link with an optional arrow. `external` adds ↗ and
+ * rel="noopener"; external links still open in the same tab.
+ */
+interface Props {
+  href: string;
+  arrow?: 'right' | 'down' | 'up';
+  external?: boolean;
+  tone?: 'ink' | 'remlo' | 'inherit';
+  weight?: 'regular' | 'bold';
+  /** Pad the link to a 44px touch target. */
+  padded?: boolean;
+}
+
+const {
+  href,
+  arrow,
+  external = false,
+  tone = 'ink',
+  weight = 'bold',
+  padded = false,
+} = Astro.props;
+const glyph = external
+  ? '↗'
+  : arrow === 'right'
+    ? '→'
+    : arrow === 'down'
+      ? '↓'
+      : arrow === 'up'
+        ? '↑'
+        : '';
+const direction = external ? 'external' : arrow;
+// Every link that leaves the site gets rel="noopener"; only `external` shows ↗.
+const leavesSite = external || /^https?:\/\//.test(href);
+---
+
+<a
+  class:list={[
+    'text-link',
+    `text-link--${tone}`,
+    `text-link--${weight}`,
+    { 'text-link--padded': padded },
+  ]}
+  href={href}
+  rel={leavesSite ? 'noopener' : undefined}
+>
+  <slot />
+  {glyph && ' '}
+  {glyph && (
+    <span class:list={['text-link__arrow', `text-link__arrow--${direction}`]} aria-hidden="true">
+      {glyph}
+    </span>
+  )}
+</a>
+
+<style>
+  .text-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .text-link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .text-link--ink {
+    color: var(--ff-ink);
+  }
+
+  .text-link--remlo {
+    color: var(--remlo-ink);
+  }
+
+  .text-link--inherit {
+    color: inherit;
+  }
+
+  .text-link--bold {
+    font-weight: 600;
+  }
+
+  .text-link--padded {
+    display: inline-block;
+    padding-block: 10px;
+  }
+
+  .text-link__arrow {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+
+  .text-link:hover .text-link__arrow--right,
+  .text-link:hover .text-link__arrow--external {
+    transform: translateX(3px);
+  }
+
+  .text-link:hover .text-link__arrow--down {
+    transform: translateY(3px);
+  }
+
+  .text-link:hover .text-link__arrow--up {
+    transform: translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-link__arrow {
+      transition: none;
+    }
+
+    .text-link:hover .text-link__arrow {
+      transform: none;
+    }
+  }
+</style>

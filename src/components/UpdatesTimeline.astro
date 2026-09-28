@@ -1,0 +1,73 @@
+---
+/*
+ * Dated updates. Renders only approved entries; with none it renders
+ * nothing, and the page omits the section and its nav item (sections.ts).
+ */
+import type { Update } from '../content/schemas';
+
+interface Props {
+  entries: readonly Update[];
+}
+
+const { entries } = Astro.props;
+const approved = entries.filter((entry) => entry.approved);
+const monthYear = new Intl.DateTimeFormat('en-SG', {
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const format = (date: string) => monthYear.format(new Date(`${date}-01T00:00:00Z`));
+---
+
+{approved.length > 0 && (
+  <ol class="timeline">
+    {approved.map((entry) => (
+      <li class="timeline__entry">
+        <time class="timeline__date" datetime={entry.date}>
+          {format(entry.date)}
+        </time>
+        <p class="timeline__text">{entry.text}</p>
+      </li>
+    ))}
+  </ol>
+)}
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline__entry {
+    display: grid;
+    gap: 6px;
+    padding: 18px 0;
+    border-top: 1px solid var(--ff-line-paper);
+  }
+
+  .timeline__date {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ff-accent-ink);
+  }
+
+  .timeline__text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  @media (min-width: 1024px) {
+    .timeline__entry {
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: 40px;
+      padding: 22px 0;
+    }
+
+    .timeline__text {
+      font-size: 18px;
+    }
+  }
+</style>

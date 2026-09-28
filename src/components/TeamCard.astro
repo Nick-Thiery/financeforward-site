@@ -1,0 +1,148 @@
+---
+/*
+ * A team member. The initials tile is the finished design; an approved
+ * portrait replaces it (team.ts → portrait.approved).
+ */
+import { Picture } from 'astro:assets';
+import type { TeamMember } from '../content/schemas';
+
+interface Props {
+  member: TeamMember;
+}
+
+const { member } = Astro.props;
+const initials = member.name
+  .split(/\s+/)
+  .filter(Boolean)
+  .map((part) => part[0]?.toUpperCase() ?? '')
+  .join('')
+  .slice(0, 2);
+const portrait = member.portrait?.approved ? member.portrait : undefined;
+---
+
+<li class="team-card">
+  {portrait ? (
+    <Picture
+      class="team-card__portrait"
+      src={portrait.src}
+      alt={portrait.alt}
+      widths={[176, 240, 352, 480]}
+      sizes="(min-width: 1024px) 208px, (min-width: 640px) 30vw, 88px"
+      formats={['avif', 'webp']}
+      loading="lazy"
+      decoding="async"
+    />
+  ) : (
+    <div class="team-card__tile" aria-hidden="true">
+      <span>{initials}</span>
+    </div>
+  )}
+  <div class="team-card__text">
+    <h3 class="team-card__name">{member.name}</h3>
+    <p class="team-card__role">{member.role}</p>
+    <p class="team-card__bio">{member.bio}</p>
+  </div>
+</li>
+
+<style>
+  .team-card {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+    padding: 14px;
+    border: 1px solid var(--ff-line);
+    border-radius: 18px;
+    background: var(--ff-white);
+  }
+
+  .team-card__tile,
+  .team-card :global(.team-card__portrait) {
+    width: 88px;
+    height: 88px;
+    border-radius: var(--ff-radius-tile);
+  }
+
+  .team-card :global(.team-card__portrait) {
+    object-fit: cover;
+  }
+
+  .team-card__tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ff-tile);
+    font-family: var(--ff-font-serif);
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ff-accent-ink);
+  }
+
+  .team-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 2px;
+  }
+
+  .team-card__name {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  .team-card__role {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ff-accent-ink);
+  }
+
+  .team-card__bio {
+    margin-top: 2px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ff-ink-2);
+  }
+
+  @media (min-width: 640px) {
+    .team-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 14px 26px;
+      border-radius: 20px;
+    }
+
+    .team-card__tile,
+    .team-card :global(.team-card__portrait) {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .team-card__tile {
+      font-size: 52px;
+    }
+
+    .team-card__text {
+      gap: 6px;
+      padding: 8px 6px 0;
+    }
+
+    .team-card__name {
+      font-size: 22px;
+    }
+
+    .team-card__role {
+      font-size: 13px;
+    }
+
+    .team-card__bio {
+      margin-top: 4px;
+      line-height: 1.55;
+    }
+  }
+</style>

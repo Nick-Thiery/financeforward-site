@@ -1,0 +1,267 @@
+---
+/*
+ * Footer: logo on a white plate, mission line, three link groups, the
+ * disclaimer, © and "Back to top". The FinanceForward group lists only
+ * sections that render.
+ */
+import { footerNavItems } from '../content/sections';
+import { links, site } from '../content/site';
+import Logo from './Logo.astro';
+import TextLink from './TextLink.astro';
+
+const footer = site.footer;
+const [localPart, domain] = links.email.split('@');
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a class="site-footer__plate" href="#top">
+          <Logo size="footer" />
+        </a>
+        <p class="site-footer__mission">{footer.mission}</p>
+      </div>
+
+      <div class="site-footer__groups">
+        <nav class="site-footer__group" aria-labelledby="footer-remlo">
+          <p class="site-footer__heading" id="footer-remlo">
+            {footer.groups.remlo}
+          </p>
+          <ul>
+            <li>
+              <TextLink href={links.remlo} external tone="inherit" weight="regular" padded>
+                {footer.remloLinks.explore}
+              </TextLink>
+            </li>
+            <li>
+              <TextLink href={links.googlePlay} external tone="inherit" weight="regular" padded>
+                {footer.remloLinks.googlePlay}
+              </TextLink>
+            </li>
+            <li>
+              <TextLink href={links.remloPrivacy} tone="inherit" weight="regular" padded>
+                {footer.remloLinks.privacy}
+              </TextLink>
+            </li>
+            <li>
+              <TextLink href={links.remloTerms} tone="inherit" weight="regular" padded>
+                {footer.remloLinks.terms}
+              </TextLink>
+            </li>
+          </ul>
+        </nav>
+
+        {footerNavItems.length > 0 && (
+          <nav class="site-footer__group" aria-labelledby="footer-ff">
+            <p class="site-footer__heading" id="footer-ff">
+              {footer.groups.financeForward}
+            </p>
+            <ul>
+              {footerNavItems.map((item) => (
+                <li>
+                  <TextLink href={item.href} tone="inherit" weight="regular" padded>
+                    {item.label}
+                  </TextLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
+        <div class="site-footer__group site-footer__group--contact">
+          <p class="site-footer__heading">{footer.groups.contact}</p>
+          <ul>
+            <li>
+              <a class="site-footer__email" href={links.mailto}>
+                {localPart}@<wbr />
+                {domain}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__disclaimer">{footer.disclaimer}</p>
+      <div class="site-footer__meta">
+        <p>{footer.copyright}</p>
+        <TextLink href="#top" arrow="up" tone="ink" weight="regular" padded>
+          {footer.backToTop}
+        </TextLink>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 56px 0 40px;
+    border-top: 1px solid var(--ff-line);
+    background: var(--ff-paper);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .site-footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .site-footer__plate {
+    align-self: flex-start;
+    display: block;
+    padding: 10px 14px;
+    border: 1px solid var(--ff-line);
+    border-radius: 12px;
+    background: var(--ff-white);
+  }
+
+  .site-footer__mission {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  .site-footer__groups {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .site-footer__group--contact {
+    grid-column: 1 / -1;
+  }
+
+  .site-footer__group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 16px;
+  }
+
+  .site-footer__heading {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ff-muted);
+  }
+
+  .site-footer__email {
+    display: inline-block;
+    padding-block: 10px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .site-footer__email:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 22px;
+    border-top: 1px solid var(--ff-line-paper);
+  }
+
+  .site-footer__disclaimer {
+    max-width: 980px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ff-ink-2);
+  }
+
+  .site-footer__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--ff-muted);
+  }
+
+  .site-footer__meta :global(.text-link) {
+    font-size: 15px;
+  }
+
+  @media (min-width: 640px) {
+    .site-footer {
+      padding: 64px 0 48px;
+    }
+
+    .site-footer__groups {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .site-footer__group--contact {
+      grid-column: auto;
+    }
+
+    .site-footer__meta {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .site-footer__meta :global(.text-link) {
+      font-size: 14px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer {
+      padding: 80px 0 56px;
+    }
+
+    .site-footer__inner {
+      gap: 44px;
+    }
+
+    .site-footer__top {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .site-footer__brand {
+      gap: 18px;
+    }
+
+    .site-footer__plate {
+      padding: 12px 16px;
+      border-radius: 14px;
+    }
+
+    .site-footer__groups {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 300px;
+      gap: 40px;
+    }
+
+    .site-footer__heading {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .site-footer__bottom {
+      gap: 18px;
+      padding-top: 28px;
+    }
+  }
+</style>

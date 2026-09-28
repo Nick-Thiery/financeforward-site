@@ -1,0 +1,100 @@
+---
+/*
+ * Feature 1's visual: Remlo's own estimate label, quoted. There is no
+ * exchange-rate screenshot in v1, so no provider names or dated rates appear.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  quote: string;
+  detail: string;
+  source: string;
+}
+
+const { quote, detail, source } = Astro.props;
+---
+
+<figure class="estimate">
+  <Icon name="transfer" size={36} strokeWidth={1.7} tone="remlo" />
+  <blockquote class="estimate__quote">
+    <p class="estimate__main">“{quote}”</p>
+    <p class="estimate__detail">“{detail}”</p>
+  </blockquote>
+  <figcaption class="estimate__source">{source}</figcaption>
+</figure>
+
+<style>
+  .estimate {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    height: 356px;
+    padding: 26px 22px;
+    border: 1px solid var(--remlo-line);
+    border-radius: 18px;
+    background: var(--remlo-tint);
+  }
+
+  .estimate :global(.icon) {
+    width: 32px;
+    height: 32px;
+  }
+
+  .estimate__quote {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .estimate__main {
+    font-family: var(--ff-font-serif);
+    font-size: 23px;
+    font-weight: 500;
+    line-height: 1.22;
+    color: var(--ff-ink);
+  }
+
+  .estimate__detail {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ff-ink-2);
+  }
+
+  .estimate__source {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--remlo-label);
+  }
+
+  @media (min-width: 1024px) {
+    .estimate {
+      height: 408px;
+      padding: 32px 28px;
+      border-radius: 20px;
+    }
+
+    .estimate :global(.icon) {
+      width: 36px;
+      height: 36px;
+    }
+
+    .estimate__quote {
+      gap: 14px;
+    }
+
+    .estimate__main {
+      font-size: 27px;
+    }
+
+    .estimate__detail {
+      font-size: 15px;
+    }
+
+    .estimate__source {
+      font-size: 13px;
+    }
+  }
+</style>

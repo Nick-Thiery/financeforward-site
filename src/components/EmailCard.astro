@@ -1,0 +1,124 @@
+---
+/*
+ * Contact by email: the address as visible linked text (with a line-break
+ * opportunity after "@"), two prefilled mailto buttons and a privacy note.
+ * There is no form in v1.
+ */
+import { links, site } from '../content/site';
+import Button from './Button.astro';
+
+const [localPart, domain] = links.email.split('@');
+const copy = site.contact.emailCard;
+---
+
+<div class="email-card">
+  <p class="email-card__label">{copy.label}</p>
+  <a class="email-card__address" href={links.mailto}>
+    {localPart}@<wbr />
+    {domain}
+  </a>
+  <div class="email-card__buttons">
+    <Button href={links.mailtoCollaboration} size="md" icon="mail" fullOnMobile>
+      {copy.collaboration}
+    </Button>
+    <Button href={links.mailtoFeedback} variant="outline" size="md" icon="message" fullOnMobile>
+      {copy.feedback}
+    </Button>
+  </div>
+  <p class="email-card__note">{copy.note}</p>
+</div>
+
+<style>
+  .email-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 18px;
+    border: 1px solid var(--ff-line);
+    border-radius: var(--ff-radius-card);
+    background: var(--ff-card-ground);
+  }
+
+  .email-card__label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ff-accent-ink);
+  }
+
+  .email-card__address {
+    font-family: var(--ff-font-serif);
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ff-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+  }
+
+  .email-card__address:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .email-card__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .email-card__buttons :global(.button--md) {
+    min-height: 54px;
+  }
+
+  .email-card__note {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ff-muted);
+  }
+
+  @media (min-width: 640px) {
+    .email-card {
+      gap: 24px;
+      padding: 40px 40px;
+    }
+
+    .email-card__buttons {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .email-card__buttons :global(.button--md) {
+      min-height: 52px;
+    }
+
+    .email-card__address {
+      font-size: 28px;
+      line-height: 1.2;
+      overflow-wrap: normal;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .email-card {
+      padding: 44px 48px;
+    }
+
+    .email-card__label {
+      font-size: 13px;
+    }
+
+    .email-card__address {
+      font-size: 32px;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 6px;
+    }
+
+    .email-card__note {
+      font-size: 15px;
+      line-height: 1.55;
+    }
+  }
+</style>

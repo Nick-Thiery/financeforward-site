@@ -1,0 +1,27 @@
+---
+import { site } from '../content/site';
+---
+
+<a class="skip-link" href="#main">
+  {site.header.skipLink}
+</a>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 12px 18px;
+    border-radius: var(--ff-radius-pill);
+    background: var(--ff-ink);
+    color: var(--ff-white);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+</style>

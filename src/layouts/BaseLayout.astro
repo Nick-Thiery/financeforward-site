@@ -1,0 +1,43 @@
+---
+/*
+ * Document shell: meta, fonts, global styles and the site script.
+ * The page is noindex unless PUBLIC_SITE_INDEXABLE is exactly "true"
+ * (Nick sets it at launch); the 404 page is always noindex.
+ */
+import newsreader500 from '@fontsource/newsreader/files/newsreader-latin-500-normal.woff2?url';
+import atkinson400 from '@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2?url';
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true' && !noindex;
+---
+
+<!doctype html>
+<html lang="en-SG">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {!indexable && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#ffffff" />
+    {/* Blank, transparent icon until an approved FinanceForward favicon exists. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={newsreader500} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={atkinson400} as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <slot />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

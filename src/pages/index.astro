@@ -1,0 +1,1009 @@
+---
+/*
+ * The single home page. Copy comes from src/content/; this file only arranges
+ * it. Optional sections (Updates, Team) render only when they have content.
+ */
+import BoundaryList from '../components/BoundaryList.astro';
+import Button from '../components/Button.astro';
+import DecisionGrid from '../components/DecisionGrid.astro';
+import EmailCard from '../components/EmailCard.astro';
+import EstimateQuote from '../components/EstimateQuote.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import HelpNote from '../components/HelpNote.astro';
+import Icon from '../components/Icon.astro';
+import LanguageList from '../components/LanguageList.astro';
+import MeasureNote from '../components/MeasureNote.astro';
+import OfferingCard from '../components/OfferingCard.astro';
+import PhoneFrame from '../components/PhoneFrame.astro';
+import PrincipleList from '../components/PrincipleList.astro';
+import Section from '../components/Section.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SkipLink from '../components/SkipLink.astro';
+import TeamCard from '../components/TeamCard.astro';
+import TextLink from '../components/TextLink.astro';
+import TopicPanel from '../components/TopicPanel.astro';
+import UpdatesTimeline from '../components/UpdatesTimeline.astro';
+import { Picture } from 'astro:assets';
+import { approvedImage } from '../content/images';
+import { renders } from '../content/sections';
+import { links, site } from '../content/site';
+import { publishedTeam } from '../content/team';
+import { approvedUpdates } from '../content/updates';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { hero, why, what, remlo, approach, measure, updates, team, contact } = site;
+const remloIcon = approvedImage('remlo-icon');
+const features = remlo.features;
+const featureCount = 3;
+const teamColumns = Math.min(publishedTeam.length, 5);
+---
+
+<BaseLayout title={site.meta.title} description={site.meta.description}>
+  <SkipLink />
+  <SiteHeader />
+
+  <main id="main" tabindex="-1">
+    {/* §1 Hero */}
+    <Section id="top" labelledby="hero-title" reveal={false} class="hero">
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <Eyebrow>{hero.eyebrow}</Eyebrow>
+          <h1 id="hero-title" class="hero__title">
+            {hero.title}
+          </h1>
+          <p class="hero__lead t-lead">{hero.lead}</p>
+          <div class="hero__actions">
+            <Button href={links.remlo} external fullOnMobile>
+              {hero.primary}
+            </Button>
+            <Button href="#contact" variant="outline" fullOnMobile>
+              {hero.secondary}
+            </Button>
+          </div>
+          <p class="hero__note">{hero.buttonsNote}</p>
+          <ul class="hero__glance" aria-label={hero.glanceLabel}>
+            {hero.glance.map((item) => (
+              <li class="hero__glance-item">
+                <Icon name="check" size={18} strokeWidth={2.2} tone="accent" />
+                <span>{item}</span>
+              </li>
+            ))}
+            <li class="hero__glance-link">
+              <TextLink href="#remlo" arrow="down" padded>
+                {hero.glanceLink}
+              </TextLink>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hero__visual">
+          <div class="hero__languages">
+            <LanguageList
+              variant="panel"
+              id="hero-languages"
+              label={hero.languagesLabel}
+              caption={hero.languagesCaption}
+            />
+          </div>
+          <div class="hero__phone">
+            <PhoneFrame image="remlo-welcome" size="hero" priority />
+          </div>
+        </div>
+      </div>
+    </Section>
+
+    {/* §2 Why this matters */}
+    <Section id="why" labelledby="why-title" tone="paper">
+      <div class="why">
+        <div class="why__text">
+          <Eyebrow>{why.eyebrow}</Eyebrow>
+          <h2 id="why-title" class="t-h2">
+            {why.title}
+          </h2>
+          <p class="t-body">{why.body}</p>
+        </div>
+        <DecisionGrid items={why.decisions} />
+      </div>
+    </Section>
+
+    {/* §3 What we do */}
+    <Section id="what" labelledby="what-title">
+      <div class="section-head section-head--split">
+        <div class="section-head__title">
+          <Eyebrow>{what.eyebrow}</Eyebrow>
+          <h2 id="what-title" class="t-h2">
+            {what.title}
+          </h2>
+        </div>
+        <p class="section-head__intro t-body">{what.intro}</p>
+      </div>
+      <div class="offerings">
+        <OfferingCard
+          label={what.sessions.label}
+          title={what.sessions.title}
+          body={what.sessions.body}
+        >
+          <TopicPanel slot="media" topics={what.sessions.topics} />
+          <TextLink slot="links" href="#approach" arrow="right" padded>
+            {what.sessions.link}
+          </TextLink>
+        </OfferingCard>
+        <OfferingCard
+          label={what.remlo.label}
+          title={what.remlo.title}
+          body={what.remlo.body}
+          tone="remlo"
+        >
+          <div slot="media" class="remlo-mark">
+            {remloIcon && (
+              <Picture
+                class="remlo-mark__icon"
+                src={remloIcon.src}
+                alt={remloIcon.alt}
+                width={92}
+                height={92}
+                densities={[1, 2]}
+                formats={['avif', 'webp']}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+            <div class="remlo-mark__text">
+              <p class="remlo-mark__name">{what.remlo.panelName}</p>
+              <p class="remlo-mark__meta">{what.remlo.panelMeta}</p>
+            </div>
+          </div>
+          <Fragment slot="links">
+            <TextLink href={links.remlo} external tone="remlo" padded>
+              {what.remlo.exploreLink}
+            </TextLink>
+            <TextLink href="#remlo" arrow="down" padded>
+              {what.remlo.featuresLink}
+            </TextLink>
+          </Fragment>
+        </OfferingCard>
+      </div>
+    </Section>
+
+    {/* §4 Remlo */}
+    <Section id="remlo" labelledby="remlo-title" tone="remlo" bleed class="remlo">
+      <div class="container remlo__head">
+        <div class="remlo__intro">
+          <Eyebrow tone="remlo">{remlo.eyebrow}</Eyebrow>
+          <h2 id="remlo-title" class="t-h2 remlo__title">
+            {remlo.title}
+          </h2>
+          <p class="remlo__lead">{remlo.lead}</p>
+          <div class="remlo__actions">
+            <Button href={links.remlo} variant="remlo" external fullOnMobile>
+              {remlo.primary}
+            </Button>
+            <Button href={links.googlePlay} variant="remlo-outline" external fullOnMobile>
+              {remlo.googlePlay}
+            </Button>
+          </div>
+          <p class="remlo__note">{remlo.iphoneNote}</p>
+        </div>
+        <div class="remlo__languages">
+          <LanguageList variant="chips" id="remlo-languages" label={remlo.languagesLabel} />
+        </div>
+      </div>
+
+      <div class="remlo__features">
+        <div class="remlo__features-head">
+          <p id="features-label" class="remlo__features-label">
+            {remlo.featuresHeading}
+          </p>
+          <p class="remlo__features-position" aria-hidden="true">
+            {`${remlo.swipe} · `}
+            <span data-feature-position>1</span>
+            {` ${remlo.positionOf} ${featureCount}`}
+          </p>
+        </div>
+        <div
+          class="remlo__scroller"
+          role="region"
+          aria-labelledby="features-label"
+          tabindex="0"
+          data-feature-scroller
+        >
+          <ul class="remlo__feature-list">
+            <FeatureCard title={features.estimates.title} body={features.estimates.body}>
+              <EstimateQuote
+                quote={features.estimates.quote}
+                detail={features.estimates.quoteDetail}
+                source={features.estimates.quoteSource}
+              />
+            </FeatureCard>
+            <FeatureCard title={features.budget.title} body={features.budget.body}>
+              <PhoneFrame image="remlo-budget" size="feature" />
+            </FeatureCard>
+            <FeatureCard title={features.scamQuiz.title} body={features.scamQuiz.body}>
+              <PhoneFrame image="remlo-scam-quiz" size="feature" />
+            </FeatureCard>
+          </ul>
+        </div>
+        <div class="remlo__dots" aria-hidden="true">
+          {Array.from({ length: featureCount }, (_, index) => (
+            <span class="remlo__dot" data-feature-dot data-active={index === 0 ? '' : undefined} />
+          ))}
+        </div>
+      </div>
+
+      <div class="container remlo__boundaries">
+        <BoundaryList
+          title={remlo.boundaries.title}
+          items={remlo.boundaries.items}
+          note={remlo.boundaries.note}
+        />
+      </div>
+    </Section>
+
+    {/* §5 Our approach */}
+    <Section id="approach" labelledby="approach-title" tone="paper">
+      <div class="section-head">
+        <div class="section-head__title">
+          <Eyebrow>{approach.eyebrow}</Eyebrow>
+          <h2 id="approach-title" class="t-h2">
+            {approach.title}
+          </h2>
+        </div>
+      </div>
+      <PrincipleList items={approach.principles} />
+    </Section>
+
+    {/* §6 How we measure */}
+    <Section id="measure" labelledby="measure-title" tone="dark">
+      <div class="measure">
+        <div class="measure__title">
+          <Eyebrow tone="on-dark">{measure.eyebrow}</Eyebrow>
+          <h2 id="measure-title" class="measure__heading">
+            {measure.title}
+          </h2>
+        </div>
+        <MeasureNote body={measure.body} caveat={measure.caveat} />
+      </div>
+    </Section>
+
+    {/* Updates: optional, only with approved entries */}
+    {renders.updates && (
+      <Section id="updates" labelledby="updates-title">
+        <div class="section-head">
+          <div class="section-head__title">
+            <Eyebrow>{updates.eyebrow}</Eyebrow>
+            <h2 id="updates-title" class="t-h2">
+              {updates.title}
+            </h2>
+          </div>
+        </div>
+        <UpdatesTimeline entries={approvedUpdates} />
+      </Section>
+    )}
+
+    {/* §7 Team: optional, only with published members */}
+    {renders.team && (
+      <Section id="team" labelledby="team-title" tone="paper">
+        <div class="section-head">
+          <div class="section-head__title">
+            <Eyebrow>{team.eyebrow}</Eyebrow>
+            <h2 id="team-title" class="t-h2">
+              {team.title}
+            </h2>
+          </div>
+        </div>
+        <ul class="team-grid" data-columns={teamColumns}>
+          {publishedTeam.map((member) => (
+            <TeamCard member={member} />
+          ))}
+        </ul>
+      </Section>
+    )}
+
+    {/* §8 Contact */}
+    <Section id="contact" labelledby="contact-title">
+      <div class="contact">
+        <div class="contact__text">
+          <div class="section-head__title">
+            <Eyebrow>{contact.eyebrow}</Eyebrow>
+            <h2 id="contact-title" class="t-h2">
+              {contact.title}
+            </h2>
+          </div>
+          <div class="contact__block">
+            <h3 class="contact__subhead">{contact.organisations.title}</h3>
+            <p class="contact__body">{contact.organisations.body}</p>
+          </div>
+          <div class="contact__block">
+            <h3 class="contact__subhead">{contact.feedback.title}</h3>
+            <p class="contact__body">{contact.feedback.body}</p>
+          </div>
+        </div>
+        <div class="contact__cards">
+          <EmailCard />
+          <HelpNote />
+        </div>
+      </div>
+    </Section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  /* Shared section heads */
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .section-head__title {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* §1 Hero */
+  .hero {
+    padding-block: 36px 56px;
+  }
+
+  .hero__title {
+    margin-top: 18px;
+    font-size: 40px;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+
+  .hero__lead {
+    margin-top: 18px;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .hero__note {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ff-muted);
+    text-align: center;
+  }
+
+  .hero__glance {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ff-hairline);
+    font-size: 16px;
+    color: var(--ff-ink-2);
+  }
+
+  .hero__glance-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.45;
+  }
+
+  .hero__glance-link {
+    margin-block: -6px;
+  }
+
+  /* Mobile: the phone alone, on a paper backdrop. */
+  .hero__visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  .hero__visual::before {
+    content: '';
+    position: absolute;
+    inset: 60px 0;
+    border-radius: 24px;
+    background: var(--ff-paper);
+  }
+
+  .hero__languages {
+    display: none;
+  }
+
+  .hero__phone {
+    position: relative;
+    width: 220px;
+    height: 468px;
+  }
+
+  @media (min-width: 640px) {
+    .hero {
+      padding-block: 56px 80px;
+    }
+
+    .hero__title {
+      font-size: 52px;
+      line-height: 1.04;
+    }
+
+    .hero__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero__note {
+      margin-top: 14px;
+      text-align: left;
+    }
+
+    .hero__glance {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 28px;
+      margin-top: 40px;
+      padding-top: 22px;
+      font-size: 15px;
+    }
+
+    .hero__glance-item {
+      gap: 8px;
+    }
+
+    /* Tablet and desktop: the phone overlaps the language panel. */
+    .hero__visual {
+      display: block;
+      width: min(520px, 100%);
+      aspect-ratio: 520 / 560;
+      margin: 48px auto 0;
+      container-type: inline-size;
+    }
+
+    .hero__visual::before {
+      content: none;
+    }
+
+    .hero__languages {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 75.38%;
+      height: 87.86%;
+    }
+
+    .hero__phone {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 45.38%;
+      height: 89.29%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      padding-block: 80px 96px;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(380px, 36vw, 520px);
+      align-items: center;
+      gap: clamp(40px, 5vw, 72px);
+    }
+
+    .hero__copy {
+      max-width: 608px;
+    }
+
+    .hero__title {
+      margin-top: 24px;
+      font-size: clamp(52px, 4.45vw, 64px);
+    }
+
+    .hero__lead {
+      margin-top: 26px;
+      max-width: 580px;
+    }
+
+    .hero__actions {
+      margin-top: 36px;
+    }
+
+    .hero__visual {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  /* §2 Why this matters */
+  .why {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .why__text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  @media (min-width: 1024px) {
+    .why {
+      display: grid;
+      grid-template-columns: 392px minmax(0, 1fr);
+      gap: 88px;
+    }
+
+    .why__text {
+      gap: 22px;
+    }
+  }
+
+  /* §3 What we do */
+  .offerings {
+    display: grid;
+    gap: 14px;
+  }
+
+  .remlo-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    height: 150px;
+    background: var(--remlo-tint);
+  }
+
+  .remlo-mark :global(.remlo-mark__icon) {
+    width: 72px;
+    height: 72px;
+    border-radius: 17px;
+    box-shadow: 0 10px 24px rgb(176 74 5 / 0.22);
+  }
+
+  .remlo-mark__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .remlo-mark__name {
+    font-family: var(--ff-font-serif);
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .remlo-mark__meta {
+    font-size: 14px;
+    color: var(--remlo-label);
+  }
+
+  @media (min-width: 640px) {
+    .section-head--split {
+      gap: 20px;
+    }
+
+    .offerings {
+      gap: 24px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .offerings {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .offerings :global(.topic-panel) {
+      min-height: 236px;
+    }
+
+    .remlo-mark {
+      height: 236px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-head {
+      margin-bottom: 48px;
+    }
+
+    .section-head__title {
+      gap: 20px;
+    }
+
+    .section-head--split {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 64px;
+    }
+
+    .section-head__intro {
+      flex: 0 0 470px;
+    }
+
+    .offerings {
+      gap: 28px;
+    }
+
+    .remlo-mark {
+      gap: 22px;
+    }
+
+    .remlo-mark :global(.remlo-mark__icon) {
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+    }
+
+    .remlo-mark__text {
+      gap: 6px;
+    }
+
+    .remlo-mark__name {
+      font-size: 44px;
+    }
+
+    .remlo-mark__meta {
+      font-size: 15px;
+    }
+  }
+
+  /* §4 Remlo */
+  .remlo {
+    padding-bottom: 72px;
+  }
+
+  .remlo__head {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .remlo__intro {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .remlo__title {
+    margin-top: 16px;
+  }
+
+  .remlo__lead {
+    margin-top: 16px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  .remlo__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .remlo__note {
+    margin-top: 16px;
+    font-size: 15px;
+    color: var(--ff-muted);
+    text-align: center;
+  }
+
+  .remlo__features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .remlo__features-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(var(--ff-max), 100% - 2 * var(--ff-gutter));
+    margin-inline: auto;
+  }
+
+  .remlo__features-label {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .remlo__features-position {
+    font-size: 14px;
+    color: var(--ff-muted);
+  }
+
+  .remlo__scroller {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--ff-gutter);
+    scrollbar-width: none;
+  }
+
+  .remlo__scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .remlo__scroller:focus-visible {
+    outline-offset: -3px;
+  }
+
+  .remlo__feature-list {
+    display: flex;
+    gap: 14px;
+    width: max-content;
+    padding: 0 var(--ff-gutter) 6px;
+  }
+
+  /* 286px as designed; narrower on small phones so the next card peeks in. */
+  .remlo__feature-list > :global(li) {
+    flex: 0 0 min(286px, 100vw - 2 * var(--ff-gutter) - 24px);
+    scroll-snap-align: start;
+  }
+
+  .remlo__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .remlo__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--ff-radius-pill);
+    background: var(--remlo-field);
+    transition: width 0.2s ease;
+  }
+
+  .remlo__dot[data-active] {
+    width: 22px;
+    background: var(--remlo-ink);
+  }
+
+  .remlo__boundaries {
+    margin-top: 40px;
+  }
+
+  @media (min-width: 640px) {
+    .remlo {
+      padding-bottom: 96px;
+    }
+
+    .remlo__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .remlo__note {
+      margin-top: 14px;
+      text-align: left;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .remlo {
+      padding-bottom: clamp(96px, 8.34vw, 120px);
+    }
+
+    .remlo__head {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 72px;
+    }
+
+    .remlo__intro {
+      flex: 0 1 700px;
+    }
+
+    .remlo__title {
+      margin-top: 22px;
+    }
+
+    .remlo__lead {
+      margin-top: 18px;
+      font-size: 19px;
+    }
+
+    .remlo__languages {
+      flex: 0 0 400px;
+      padding-top: 70px;
+    }
+
+    .remlo__features {
+      margin-top: 56px;
+    }
+
+    .remlo__features-head,
+    .remlo__dots {
+      display: none;
+    }
+
+    .remlo__scroller {
+      width: min(var(--ff-max), 100% - 2 * var(--ff-gutter));
+      margin-inline: auto;
+      overflow: visible;
+    }
+
+    .remlo__feature-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      width: auto;
+      padding: 0;
+    }
+
+    .remlo__boundaries {
+      margin-top: 56px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .remlo__dot {
+      transition: none;
+    }
+  }
+
+  /* §6 How we measure */
+  .measure {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .measure__title {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .measure__heading {
+    font-size: 32px;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    color: var(--ff-on-dark);
+  }
+
+  @media (min-width: 1024px) {
+    .measure {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 560px;
+      align-items: start;
+      gap: 88px;
+    }
+
+    .measure__title {
+      gap: 20px;
+    }
+
+    .measure__heading {
+      font-size: 48px;
+      line-height: 1.08;
+    }
+  }
+
+  /* §7 Team */
+  .team-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  @media (min-width: 640px) {
+    .team-grid {
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .team-grid {
+      gap: 24px;
+    }
+
+    .team-grid[data-columns='1'] {
+      grid-template-columns: minmax(0, 240px);
+    }
+
+    .team-grid[data-columns='2'] {
+      grid-template-columns: repeat(2, minmax(0, 240px));
+    }
+
+    .team-grid[data-columns='3'] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .team-grid[data-columns='4'] {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .team-grid[data-columns='5'] {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  /* §8 Contact */
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .contact__text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .contact__block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .contact__subhead {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+
+  .contact__body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  .contact__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 8px;
+  }
+
+  @media (min-width: 1024px) {
+    .contact {
+      display: grid;
+      grid-template-columns: 440px minmax(0, 1fr);
+      gap: 88px;
+    }
+
+    .contact__text {
+      gap: 28px;
+    }
+
+    .contact__block {
+      gap: 8px;
+    }
+
+    .contact__subhead {
+      font-size: 22px;
+    }
+
+    .contact__body {
+      font-size: 17px;
+    }
+
+    .contact__cards {
+      gap: 20px;
+      margin-top: 0;
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+/*
+ * "How we measure" body text and its caveat, on the dark band.
+ * Text only: no figures, panels or empty metric slots.
+ */
+interface Props {
+  body: string;
+  caveat: string;
+}
+
+const { body, caveat } = Astro.props;
+---
+
+<div class="measure-note">
+  <p class="measure-note__body">{body}</p>
+  <p class="measure-note__caveat">{caveat}</p>
+</div>
+
+<style>
+  .measure-note {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .measure-note__body {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ff-on-dark-body);
+  }
+
+  .measure-note__caveat {
+    padding-top: 18px;
+    border-top: 1px solid var(--ff-dark-line);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ff-on-dark-2);
+  }
+
+  @media (min-width: 1024px) {
+    .measure-note {
+      padding-top: 34px;
+    }
+
+    .measure-note__body {
+      font-size: 19px;
+    }
+
+    .measure-note__caveat {
+      padding-top: 20px;
+      font-size: 16px;
+    }
+  }
+</style>

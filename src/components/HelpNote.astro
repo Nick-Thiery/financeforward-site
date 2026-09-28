@@ -1,0 +1,50 @@
+---
+/* "Not for urgent help": the ScamShield Helpline and emergency numbers. */
+import { links, site } from '../content/site';
+import Icon from './Icon.astro';
+
+const help = site.contact.help;
+---
+
+<div class="help-note" role="note">
+  <Icon name="alert" size={22} strokeWidth={2} tone="ink" />
+  <p>
+    <strong>{help.lead}</strong> {help.scamsBefore}{' '}
+    <a href={links.telScamShield}>{help.scamsNumber}</a>. {help.emergencyBefore}{' '}
+    <a href={links.telEmergency}>{help.emergencyNumber}</a>.
+  </p>
+</div>
+
+<style>
+  .help-note {
+    display: flex;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 16px;
+    background: var(--ff-paper);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ff-ink);
+  }
+
+  .help-note :global(.icon) {
+    margin-top: 2px;
+  }
+
+  .help-note a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .help-note a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  @media (min-width: 1024px) {
+    .help-note {
+      gap: 14px;
+      padding: 20px 22px;
+    }
+  }
+</style>

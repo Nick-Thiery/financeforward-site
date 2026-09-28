@@ -1,10 +1,45 @@
 # FinanceForward website v1: what was built
 
-A static Astro site for FinanceForward, built from the v0.2 handoff: the design in `design/` and public copy v0.2 (the brief's Appendix A), verbatim. This PR is a draft for review. Nothing has been merged.
+A static Astro site for FinanceForward, built from the v0.2 handoff: the design in `design/` and public copy v0.2 (the brief's Appendix A), verbatim. PR #1 was merged into `main` on 28 Sep 2026 (merge commit `b74b043`), and `main` is deployed to production. See "Production deployment" below.
 
-**Preview:** https://financeforward-site-oel0i2u3n-nick-thierys-projects.vercel.app (Vercel Authentication: sign in with your Vercel account.)
+**Production:** https://financeforward-site.vercel.app (public, `noindex, nofollow`, no custom domain)
+
+**Earlier preview:** https://financeforward-site-oel0i2u3n-nick-thierys-projects.vercel.app (Vercel Authentication: sign in with your Vercel account.)
 
 > **Production deployment: created by mistake, now removed.** Vercel promoted the project's _first_ deployment (`dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`) to production, even though it was built and deployed with `--target=preview`. I wrongly reported it as protected: I had only tested its deployment URL. Its production alias `financeforward-site.vercel.app` was public and served the full site to anonymous visitors. At Nick's instruction I removed it with `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF` on 28 Sep 2026. Logged out, `financeforward-site.vercel.app`, `financeforward-site-nick-thierys-projects.vercel.app` and the deployment URL now all return 404 `DEPLOYMENT_NOT_FOUND`. The project has no production deployment. The preview above is unaffected. See "Deployment" below.
+
+## Production deployment (28 Sep 2026, approved by Nick)
+
+|                |                                                                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Deployment ID  | `dpl_61BA4k5paWsKWma3y29BC3gZAcab`                                                                                                                      |
+| Deployment URL | https://financeforward-site-q6i64kdx9-nick-thierys-projects.vercel.app (Vercel sign-in required)                                                        |
+| Public URL     | https://financeforward-site.vercel.app                                                                                                                  |
+| Also aliased   | https://financeforward-site-nick-thierys-projects.vercel.app (Vercel sign-in required)                                                                  |
+| Source         | `main` at `b74b043` (PR #1 merge)                                                                                                                       |
+| Built          | locally: `vercel pull --environment=production`, then `vercel build --prod` (the output guard passed, 93 files), then `vercel deploy --prebuilt --prod` |
+| Created        | 2026-09-28 10:37:44 UTC · target `production` · Ready                                                                                                   |
+
+Vercel assigned the two `.vercel.app` addresses automatically as the project's default production domains. No domain, alias or DNS command was run, and `PUBLIC_SITE_INDEXABLE` is not set in any environment.
+
+**Checks while logged out.** I used curl plus a fresh Chromium session with no cookies, at 1440 and 390. Every request to a host other than `financeforward-site.vercel.app` was blocked and recorded, and remloapp.com was never loaded.
+
+| Check                            | Result                                                                                                                                                                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `financeforward-site.vercel.app` | 200, full page with all 8 sections (top, why, what, remlo, approach, measure, team, contact)                                                                                                                                               |
+| Team section                     | Nick Thiery, Alex Thiery, Marcus Magura, Christopher Chen, Ries Joos; tiles NT, AT, MM, CC, RJ                                                                                                                                             |
+| Logo                             | Header logo rendered (AVIF; 132×40 at 1440, 106×32 at 390); footer logo loaded too                                                                                                                                                         |
+| noindex                          | `<meta name="robots" content="noindex, nofollow">` on `/` and the 404                                                                                                                                                                      |
+| Security headers                 | CSP (`default-src 'self'` … `frame-ancestors 'none'`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()`; Vercel adds HSTS |
+| 404 page                         | `/this-page-does-not-exist` returns 404 with "This page isn't here." and the same headers                                                                                                                                                  |
+| Explore Remlo links              | All 6 are exactly `https://remloapp.com`; the only other remloapp.com links are `/privacy` and `/terms`; every external link has `rel="noopener"`                                                                                          |
+| Mailto links                     | The three `href`s exactly as briefed                                                                                                                                                                                                       |
+| Third-party requests             | None: the only host contacted was `financeforward-site.vercel.app`; 0 blocked, 0 failed, 0 console errors at both widths                                                                                                                   |
+| Updates and metrics              | Absent                                                                                                                                                                                                                                     |
+| Private files                    | `/review/private-terms.txt`, `/private-terms.txt` and `/review/private-review-checklist.md` all return 404                                                                                                                                 |
+| Old preview URL                  | 302 to Vercel sign-in (`vercel.com/sso-api`)                                                                                                                                                                                               |
+
+Screenshots of the live Team section are in `artifacts/production/team-1440.png` and `team-390.png`, which are git-ignored.
 
 ## Update, 28 Sep 2026: approvals
 
@@ -200,7 +235,7 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
 - **Browser check:** I opened the preview in Chrome while signed in. It made same-origin requests only, with no CSP errors and no toolbar.
 - **What went wrong:** the project's first deployment, `dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`, was promoted to **production** by Vercel even though `.vercel/output/builds.json` records `"target": "preview"`. Vercel promotes a project's first deployment when it has no production deployment yet. I did not run `--prod`, `promote`, `alias`, `domains` or `dns`. The second deployment, the preview above, is a normal preview with no aliases.
 - **Removed:** Nick approved removing the production deployment, and I ran `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`, by ID only, which removed exactly that one deployment. Checked logged out afterwards: all three production URLs return 404 `DEPLOYMENT_NOT_FOUND`, the project has no production target, and the preview (`dpl_774qrfskFowczH4jrADo2NGdxvNT`) is still Ready and still requires Vercel sign-in.
-- **Before any future deploy:** the project has no production deployment again, so Vercel may auto-promote the next deployment to production in the same way. No further deploys until Nick says so. Whoever deploys next should check `vercel inspect <url>` for `target` straight away, and treat a `production` result as needing immediate removal.
+- **Production since 28 Sep 2026:** with Nick's approval, `main` was deployed with `vercel build --prod` and `vercel deploy --prebuilt --prod`. See "Production deployment" at the top. The project now has a production deployment, so future preview deploys won't be auto-promoted.
 
 ## Choices I made
 
@@ -234,7 +269,7 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
 
 ## Confirmations
 
-- **Production and domains:** no domain, alias, DNS or promotion command was run. Vercel auto-promoted the first deployment to production, and it was publicly reachable at `financeforward-site.vercel.app` until it was removed at Nick's instruction; see "Deployment". No production deployment exists now. `PUBLIC_SITE_INDEXABLE` is unset.
+- **Production and domains:** Vercel auto-promoted the first deployment to production. It was publicly reachable at `financeforward-site.vercel.app` until it was removed at Nick's instruction; see "Deployment". On 28 Sep 2026, with Nick's approval, `main` was deployed to production (`dpl_61BA4k5paWsKWma3y29BC3gZAcab`). No domain, alias, DNS or promotion command was run. `PUBLIC_SITE_INDEXABLE` is unset, so the site stays noindex.
 - **Remlo:** untouched. It was cloned read-only to a temp directory, and nothing was committed, pushed, deployed or run there, including its backend scripts, Supabase CLI and tests. remloapp.com was never loaded; tests abort any request to it.
 - **Outreach and tracking:** no email was sent, no accounts were created, and no analytics, cookies, forms or third-party requests were added.
 - **Private material:** `handoff/` is git-ignored and was never committed or uploaded. `review/` is committed to this private repo but never built or uploaded.

@@ -1,0 +1,35 @@
+/*
+ * Self-hosted fonts (Fontsource, SIL Open Font License), Latin subset only,
+ * all with font-display: swap. Newsreader 500 and Atkinson 400 are preloaded
+ * in BaseLayout.
+ */
+@import '@fontsource/newsreader/latin-400.css';
+@import '@fontsource/newsreader/latin-500.css';
+@import '@fontsource/newsreader/latin-600.css';
+@import '@fontsource/atkinson-hyperlegible-next/latin-400.css';
+@import '@fontsource/atkinson-hyperlegible-next/latin-500.css';
+@import '@fontsource/atkinson-hyperlegible-next/latin-600.css';
+@import '@fontsource/atkinson-hyperlegible-next/latin-700.css';
+
+/*
+ * Metric-matched fallbacks, so text keeps its size and line breaks while the
+ * web fonts load. Computed from the Fontsource files' average character width,
+ * ascent and descent against Georgia and Arial (the same method as next/font).
+ */
+@font-face {
+  font-family: 'Newsreader Fallback';
+  src: local('Georgia');
+  size-adjust: 98.36%;
+  ascent-override: 74.72%;
+  descent-override: 26.94%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 99.6%;
+  ascent-override: 98.8%;
+  descent-override: 31.73%;
+  line-gap-override: 0%;
+}

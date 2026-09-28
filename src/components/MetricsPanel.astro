@@ -1,0 +1,85 @@
+---
+/*
+ * Public figures panel. NOT MOUNTED in v1: no page imports this component,
+ * and a unit test plus the output guard enforce that.
+ *
+ * To use it later, every item in metrics.ts needs a definition, source,
+ * period, caveat and a named approval, and `enabled` must be true.
+ */
+import type { MetricItem } from '../content/schemas';
+
+interface Props {
+  enabled: boolean;
+  items: readonly MetricItem[];
+}
+
+const { enabled, items } = Astro.props;
+const dateFormat = new Intl.DateTimeFormat('en-SG', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const format = (date: string) => dateFormat.format(new Date(`${date}T00:00:00Z`));
+---
+
+{enabled && items.length > 0 && (
+  <div class="metrics" data-component="metrics">
+    <dl class="metrics__list">
+      {items.map((item) => (
+        <div class="metrics__item">
+          <dt class="metrics__label">{item.label}</dt>
+          <dd class="metrics__value">{item.value}</dd>
+          <dd class="metrics__definition">{item.definition}</dd>
+          <dd class="metrics__meta">
+            {item.source} · {format(item.periodStart)}–{format(item.periodEnd)}
+          </dd>
+          <dd class="metrics__caveat">{item.caveat}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+)}
+
+<style>
+  .metrics__list {
+    display: grid;
+    gap: 24px;
+    margin: 0;
+  }
+
+  .metrics__item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ff-dark-line);
+  }
+
+  .metrics__item dd {
+    margin: 0;
+  }
+
+  .metrics__label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ff-accent-on-dark);
+  }
+
+  .metrics__value {
+    font-family: var(--ff-font-serif);
+    font-size: 40px;
+    line-height: 1.1;
+    color: var(--ff-on-dark);
+  }
+
+  .metrics__definition,
+  .metrics__meta,
+  .metrics__caveat {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ff-on-dark-2);
+  }
+</style>

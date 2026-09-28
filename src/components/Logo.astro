@@ -1,0 +1,64 @@
+---
+/*
+ * The FinanceForward logo: the old site's raster with its white background,
+ * used as-is (only uniform white margins trimmed). It must always sit on
+ * white. If the image is ever unapproved, the name is shown as text instead.
+ */
+import { Picture } from 'astro:assets';
+import { approvedImage } from '../content/images';
+import { site } from '../content/site';
+
+interface Props {
+  size: 'header' | 'footer' | 'menu';
+  eager?: boolean;
+}
+
+const { size, eager = false } = Astro.props;
+const logo = approvedImage('ff-logo');
+const height = 40;
+const width = logo ? Math.round((logo.src.width / logo.src.height) * height) : 0;
+---
+
+{logo ? (
+  <Picture
+    class:list={['logo', `logo--${size}`]}
+    src={logo.src}
+    alt={logo.alt}
+    width={width}
+    height={height}
+    densities={[1, 2, 3]}
+    formats={['avif', 'webp']}
+    quality={90}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+  />
+) : (
+  <span class:list={['logo-text', `logo--${size}`]}>{site.brand.name}</span>
+)}
+
+<style>
+  .logo {
+    display: block;
+    width: auto;
+    height: 32px;
+  }
+
+  .logo--footer {
+    height: 34px;
+  }
+
+  .logo-text {
+    font-family: var(--ff-font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--ff-ink);
+  }
+
+  @media (min-width: 1024px) {
+    .logo--header,
+    .logo--footer {
+      height: 40px;
+    }
+  }
+</style>

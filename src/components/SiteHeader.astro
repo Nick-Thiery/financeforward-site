@@ -1,0 +1,219 @@
+---
+/*
+ * Sticky site header. Desktop (≥1024px): logo, section nav and "Explore Remlo".
+ * Below 1024px: logo, a "Remlo ↗" pill and the Menu button, which opens
+ * MobileMenu. The `minimal` variant (404 page) has no section nav.
+ */
+import { links, site } from '../content/site';
+import { navItems } from '../content/sections';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import MobileMenu from './MobileMenu.astro';
+
+interface Props {
+  variant?: 'full' | 'minimal';
+}
+
+const { variant = 'full' } = Astro.props;
+const full = variant === 'full';
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner">
+    <a class="site-header__logo" href={full ? '#top' : '/'}>
+      <Logo size="header" eager />
+    </a>
+
+    {full && (
+      <nav class="site-header__nav" aria-label={site.header.navLabel}>
+        <ul class="site-header__links">
+          {navItems.map((item) => (
+            <li>
+              <a class="site-header__link" href={item.href} data-nav-link={item.id}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <Button href={links.remlo} size="sm" external>
+          {site.header.exploreRemlo}
+        </Button>
+      </nav>
+    )}
+
+    <div class:list={['site-header__compact', { 'site-header__compact--always': !full }]}>
+      <a class="site-header__pill" href={links.remlo} rel="noopener">
+        {site.header.mobileRemlo}
+        <Icon name="arrow-ne" size={13} strokeWidth={2.4} />
+      </a>
+      {full && (
+        <button
+          type="button"
+          class="site-header__menu"
+          aria-label={site.header.menu}
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-haspopup="dialog"
+          data-menu-open
+        >
+          <Icon name="menu" size={18} strokeWidth={2} />
+        </button>
+      )}
+    </div>
+  </div>
+</header>
+
+{full && <MobileMenu />}
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--ff-white);
+    border-bottom: 1px solid var(--ff-hairline);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .site-header[data-scrolled] {
+    background: rgb(255 255 255 / 0.96);
+    border-bottom-color: transparent;
+    box-shadow:
+      0 1px 0 var(--ff-hairline),
+      0 8px 22px rgb(22 24 29 / 0.07);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: var(--ff-header-h);
+    padding: 0 12px 0 var(--ff-gutter);
+  }
+
+  .site-header__logo {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+  }
+
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__compact {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .site-header__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: var(--ff-radius-pill);
+    background: var(--ff-ink);
+    color: var(--ff-white);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .site-header__pill:hover {
+    background: var(--ff-ink-hover);
+  }
+
+  .site-header__menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1.5px solid var(--ff-field);
+    border-radius: var(--ff-radius-pill);
+    background: var(--ff-white);
+    color: var(--ff-ink);
+    cursor: pointer;
+  }
+
+  .site-header__menu:hover {
+    border-color: var(--ff-ink);
+    background: var(--ff-paper);
+  }
+
+  @media (min-width: 640px) {
+    .site-header__inner {
+      padding-right: calc(var(--ff-gutter) - 8px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-header[data-scrolled] {
+      box-shadow:
+        0 1px 0 var(--ff-hairline),
+        0 10px 28px rgb(22 24 29 / 0.07);
+    }
+
+    .site-header__inner {
+      width: min(var(--ff-max), 100% - 2 * var(--ff-gutter));
+      margin-inline: auto;
+      padding: 0;
+    }
+
+    .site-header__nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(20px, 2.5vw, 36px);
+    }
+
+    .site-header__links {
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 1.95vw, 28px);
+      white-space: nowrap;
+    }
+
+    .site-header__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ff-ink-2);
+      text-decoration: none;
+    }
+
+    .site-header__link:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 8px;
+    }
+
+    .site-header__link[aria-current='location'] {
+      color: var(--ff-ink);
+      text-decoration: underline;
+      text-decoration-color: var(--ff-accent-line);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 8px;
+    }
+
+    .site-header__compact {
+      display: none;
+    }
+
+    .site-header__compact--always {
+      display: flex;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
+</style>

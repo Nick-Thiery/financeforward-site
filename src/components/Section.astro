@@ -1,0 +1,67 @@
+---
+/*
+ * A page section: background tone, vertical rhythm and the content container.
+ * Sections fade up once as they enter the viewport (see scripts/site.ts).
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends Omit<HTMLAttributes<'section'>, 'id' | 'class'> {
+  id: string;
+  labelledby: string;
+  tone?: 'white' | 'paper' | 'remlo' | 'dark';
+  /** Skip the inner container, for rows that need to bleed to the edges. */
+  bleed?: boolean;
+  /** Fade up on entry. Off for the hero. */
+  reveal?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  labelledby,
+  tone = 'white',
+  bleed = false,
+  reveal = true,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={['section', `section--${tone}`, { 'on-dark': tone === 'dark' }, className]}
+  data-reveal-section={reveal ? '' : undefined}
+  {...rest}
+>
+  {bleed ? (
+    <slot />
+  ) : (
+    <div class="container">
+      <slot />
+    </div>
+  )}
+</section>
+
+<style>
+  .section {
+    padding-block: var(--ff-section-y);
+  }
+
+  .section--white {
+    background: var(--ff-white);
+  }
+
+  .section--paper {
+    background: var(--ff-paper);
+  }
+
+  .section--remlo {
+    background: var(--remlo-tint);
+  }
+
+  .section--dark {
+    background: var(--ff-ink);
+    color: var(--ff-on-dark);
+  }
+</style>

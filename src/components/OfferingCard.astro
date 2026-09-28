@@ -1,0 +1,122 @@
+---
+/*
+ * One of the two "What we do" cards. The top panel comes from the `media`
+ * slot (TopicPanel or the Remlo mark); links come from the `links` slot.
+ */
+interface Props {
+  label: string;
+  title: string;
+  body: string;
+  tone?: 'accent' | 'remlo';
+}
+
+const { label, title, body, tone = 'accent' } = Astro.props;
+---
+
+<article class="offering">
+  <div class="offering__media">
+    <slot name="media" />
+  </div>
+  <div class="offering__body">
+    <p class:list={['offering__label', `offering__label--${tone}`]}>{label}</p>
+    <h3 class="offering__title">{title}</h3>
+    <p class="offering__text">{body}</p>
+    <div class="offering__links">
+      <slot name="links" />
+    </div>
+  </div>
+</article>
+
+<style>
+  .offering {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--ff-line);
+    border-radius: var(--ff-radius-card);
+    background: var(--ff-white);
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .offering:hover {
+    box-shadow: 0 14px 34px rgb(22 24 29 / 0.1);
+    transform: translateY(-2px);
+  }
+
+  .offering__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 22px 16px;
+  }
+
+  .offering__label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .offering__label--accent {
+    color: var(--ff-accent-ink);
+  }
+
+  .offering__label--remlo {
+    color: var(--remlo-ink);
+  }
+
+  .offering__title {
+    font-size: 25px;
+    line-height: 1.18;
+  }
+
+  .offering__text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  .offering__links {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 22px;
+    font-size: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    .offering__body {
+      gap: 12px;
+      padding: 32px 36px 26px;
+    }
+
+    .offering__label {
+      font-size: 13px;
+    }
+
+    .offering__title {
+      font-size: 30px;
+      line-height: 1.15;
+    }
+
+    .offering__text {
+      font-size: 17px;
+    }
+
+    .offering__links {
+      column-gap: 24px;
+      font-size: 17px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .offering {
+      transition: none;
+    }
+
+    .offering:hover {
+      transform: none;
+    }
+  }
+</style>

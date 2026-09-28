@@ -1,0 +1,83 @@
+---
+/* The four everyday decisions in "Why this matters": 2×2 on desktop, stacked on mobile. */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  items: readonly { icon: string; title: string; body: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="decision-grid">
+  {items.map((item) => (
+    <li class="decision">
+      <Icon name={item.icon as IconName} size={28} tone="accent" />
+      <h3 class="decision__title">{item.title}</h3>
+      <p class="decision__body">{item.body}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .decision-grid {
+    display: grid;
+    gap: 26px;
+  }
+
+  .decision {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 18px;
+    border-top: 1px solid var(--ff-line-paper);
+  }
+
+  .decision :global(.icon) {
+    width: 24px;
+    height: 24px;
+  }
+
+  .decision__title {
+    font-size: 22px;
+    line-height: 1.25;
+  }
+
+  .decision__body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ff-ink-2);
+  }
+
+  @media (min-width: 640px) {
+    .decision-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px 40px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .decision-grid {
+      gap: 44px 48px;
+      padding-top: 6px;
+    }
+
+    .decision {
+      gap: 12px;
+      padding-top: 22px;
+    }
+
+    .decision :global(.icon) {
+      width: 28px;
+      height: 28px;
+    }
+
+    .decision__title {
+      font-size: 24px;
+    }
+
+    .decision__body {
+      font-size: 17px;
+    }
+  }
+</style>

@@ -1,0 +1,134 @@
+---
+/* "What Remlo doesn't do": a card with the four boundaries and a note. */
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  items: readonly string[];
+  note: string;
+}
+
+const { title, items, note } = Astro.props;
+---
+
+<div class="boundaries">
+  <div class="boundaries__intro">
+    <Icon name="shield-check" size={32} tone="remlo" />
+    <h3 class="boundaries__title">{title}</h3>
+    <p class="boundaries__note">{note}</p>
+  </div>
+  <ul class="boundaries__list">
+    {items.map((item) => (
+      <li class="boundaries__item">
+        <Icon name="minus-circle" size={20} strokeWidth={2} tone="remlo" />
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  /*
+   * Mobile: icon, title, list, then the note (as in the design).
+   * Desktop: icon, title and note on the left; the list on the right.
+   */
+  .boundaries {
+    display: grid;
+    grid-template-areas:
+      'icon'
+      'title'
+      'list'
+      'note';
+    gap: 10px;
+    padding: 26px 22px 12px;
+    border: 1px solid var(--remlo-line);
+    border-radius: var(--ff-radius-card);
+    background: var(--ff-white);
+  }
+
+  .boundaries__intro {
+    display: contents;
+  }
+
+  .boundaries__intro :global(.icon) {
+    grid-area: icon;
+    width: 28px;
+    height: 28px;
+  }
+
+  .boundaries__title {
+    grid-area: title;
+    font-size: 26px;
+    line-height: 1.15;
+  }
+
+  .boundaries__note {
+    grid-area: note;
+    padding: 8px 0 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ff-muted);
+  }
+
+  .boundaries__list {
+    grid-area: list;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .boundaries__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .boundaries__item + .boundaries__item {
+    border-top: 1px solid var(--remlo-rule);
+  }
+
+  @media (min-width: 1024px) {
+    .boundaries {
+      grid-template-areas: 'intro list';
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 64px;
+      padding: 44px 48px;
+    }
+
+    .boundaries__intro {
+      grid-area: intro;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .boundaries__intro :global(.icon) {
+      width: 32px;
+      height: 32px;
+    }
+
+    .boundaries__title {
+      font-size: 32px;
+    }
+
+    .boundaries__note {
+      padding: 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ff-ink-2);
+    }
+
+    .boundaries__item {
+      gap: 16px;
+      padding: 17px 0;
+      font-size: 18px;
+    }
+
+    .boundaries__item :global(.icon) {
+      width: 22px;
+      height: 22px;
+    }
+  }
+</style>

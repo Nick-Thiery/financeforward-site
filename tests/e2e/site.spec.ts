@@ -218,6 +218,14 @@ test('Updates and metrics are absent; Team and the rest render', async ({ page }
   await expect(page.locator('[data-component="metrics"]')).toHaveCount(0);
   for (const { id } of NAV) await expect(page.locator(`section#${id}`)).toHaveCount(1);
   await expect(page.locator('#team li')).toHaveCount(5);
+  await expect(page.locator('#team h3')).toHaveText([
+    'Nick Thiery',
+    'Alex Thiery',
+    'Marcus Magura',
+    'Christopher Chen',
+    'Ries Joos',
+  ]);
+  await expect(page.locator('#team .team-card__tile')).toHaveText(['NT', 'AT', 'MM', 'CC', 'RJ']);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Clearer information for everyday money decisions.',
   );
@@ -237,7 +245,7 @@ test('review/ content is absent from the page and the server', async ({ page, re
       .trim();
     if (clean.length >= 40) expect(html).not.toContain(clean);
   }
-  for (const phrase of ['Private review checklist', 'Reese or Ries', 'Magura', 'LEO workshop']) {
+  for (const phrase of ['Private review checklist', 'Reese or Ries', 'LEO workshop']) {
     expect(text).not.toContain(phrase);
   }
   for (const path of [

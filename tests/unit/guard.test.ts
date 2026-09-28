@@ -204,6 +204,8 @@ describe('output guard: review/ never ships', () => {
     const terms = readTerms(join(process.cwd(), 'review', 'private-terms.txt')) as string[];
     expect(terms).toContain("It's Raining Raincoats");
     expect(terms).toContain('70+');
-    expect(terms.length).toBeGreaterThanOrEqual(19);
+    // "Magura" was removed once Marcus Magura's surname was confirmed for publication.
+    expect(terms).not.toContain('Magura');
+    expect(terms.length).toBeGreaterThanOrEqual(18);
   });
 });

@@ -48,9 +48,9 @@ describe('content modules (as shipped)', () => {
     expect(team.map((m) => m.name)).toEqual([
       'Nick Thiery',
       'Alex Thiery',
-      'Marcus',
-      'Christopher',
-      'Reese',
+      'Marcus Magura',
+      'Christopher Chen',
+      'Ries Joos',
     ]);
     expect(publishedTeam).toHaveLength(5);
     expect(team.every((m) => m.portrait === undefined)).toBe(true);

@@ -27,19 +27,19 @@ export const team = teamSchema.parse([
     publish: true,
   },
   {
-    name: 'Marcus',
+    name: 'Marcus Magura',
     role: 'Operations',
     bio: 'Coordinates delivery plans and team execution.',
     publish: true,
   },
   {
-    name: 'Christopher',
+    name: 'Christopher Chen',
     role: 'Software Engineering',
     bio: 'Develops and maintains Remlo.',
     publish: true,
   },
   {
-    name: 'Reese',
+    name: 'Ries Joos',
     role: 'Data Analytics',
     bio: 'Measures product use, attribution and learning.',
     publish: true,

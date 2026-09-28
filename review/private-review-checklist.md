@@ -26,14 +26,14 @@ None of these items block the v1 preview or launch. They decide what can be **ad
 
 ## Team
 
-- **Spelling:** "Reese" or "Ries"?
-- **Names:** do surnames appear (Marcus, Christopher, Reese/Ries)? The old site shows "Marcus Magura"; don't use it unless confirmed.
+- **Spelling:** ✅ Resolved 28 Sep 2026: "Ries" (Ries Joos).
+- **Names:** ✅ Resolved 28 Sep 2026: full names confirmed by Nick and published: Marcus Magura, Christopher Chen, Ries Joos. ("Magura" removed from `private-terms.txt`.)
 - **Consent:** each person confirms their title, one-line description and OK to appear. If someone doesn't, set `publish: false`; the grid reflows, and the section disappears if nobody is left.
 - **Portraits:** optional. Get each person's consent, plus a parent or guardian's for anyone under 18.
 
 ## Brand and assets
 
-- **FinanceForward logo:** the only file found is the old site's 1408×736 PNG with a white background. Confirm it's FinanceForward's to use, and send the vector or transparent original if one exists.
+- **FinanceForward logo:** ✅ Approved as-is by Nick on 28 Sep 2026: the old site's 1408×736 PNG with a white background (used with uniform white margins trimmed). A vector or transparent original can replace it later if one turns up.
 - **Remlo mark:** only raster icons exist; no vector found.
 - **Exchange Rate screenshot:** deliberately not used in v1. A live capture shows specific providers and rates, and one provider appears first while partnership talks are open. The feature card instead quotes the app's "Illustrative estimates, not provider quotes" label.
 - **Photos:** none are approved. The layout needs none; add them later only with written web-use consent and host approval.

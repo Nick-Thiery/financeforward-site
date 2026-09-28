@@ -25,7 +25,7 @@ export const images = imagesSchema.parse([
     alt: site.brand.logoAlt,
     approved: true,
     source:
-      "Old site's 1408×736 logo raster (handoff/brand), uniform white margins trimmed to 949×288",
+      "Old site's 1408×736 logo raster, approved as-is by Nick on 28 Sep 2026; uniform white margins trimmed to 949×288",
   },
   {
     id: 'remlo-icon',

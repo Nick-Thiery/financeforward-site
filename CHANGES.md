@@ -6,6 +6,14 @@ A static Astro site for FinanceForward, built from the v0.2 handoff: the design 
 
 > **Production deployment: created by mistake, now removed.** Vercel promoted the project's _first_ deployment (`dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`) to production, even though it was built and deployed with `--target=preview`. I wrongly reported it as protected: I had only tested its deployment URL. Its production alias `financeforward-site.vercel.app` was public and served the full site to anonymous visitors. At Nick's instruction I removed it with `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF` on 28 Sep 2026. Logged out, `financeforward-site.vercel.app`, `financeforward-site-nick-thierys-projects.vercel.app` and the deployment URL now all return 404 `DEPLOYMENT_NOT_FOUND`. The project has no production deployment. The preview above is unaffected. See "Deployment" below.
 
+## Update, 28 Sep 2026: approvals
+
+- **Team names confirmed by Nick.** `src/content/team.ts` now lists Marcus Magura (Operations), Christopher Chen (Software Engineering) and Ries Joos (Data Analytics). Nick Thiery and Alex Thiery are unchanged, as are all roles and one-line descriptions. The initials tiles are now NT, AT, MM, CC and RJ.
+- **Private terms.** "Magura" is removed from `review/private-terms.txt` so the guard allows the confirmed surname. The other 18 terms stay.
+- **Checklist.** In `review/private-review-checklist.md`, the spelling ("Ries") and surname items are marked resolved, and the logo is marked approved as-is on 28 Sep 2026.
+- **Logo.** The old site's raster is approved as-is. Its registry entry in `images.ts` records the approval.
+- **Tests.** The browser tests now check the five full names and the five initials tiles. After the change, lint, `astro check`, 50 unit tests, the output guard and 104 browser tests all pass.
+
 ## Why a separate repo and Vercel project
 
 - Remlo's `vercel.json` rewrites every path to its app and redirects the old host, so a site can't live beside it.
@@ -134,20 +142,20 @@ The guard caught one real problem during the build, which led to a fix. My first
   - the quoted estimate strings
   - `com.remlo.app`
 - **Screenshots:** all three are reused. Remlo's HEAD is `1eabe26`, the capture commit, so `git diff --stat 1eabe26 HEAD -- <the listed files>` is empty. Nothing was recaptured, and remloapp.com was never loaded.
-- **FinanceForward logo:** uniform white margins trimmed from the 1408×736 reference to 949×288. That is pixel-identical to the design's own trimmed asset. It is not recoloured or redrawn.
+- **FinanceForward logo:** approved as-is by Nick on 28 Sep 2026. Uniform white margins trimmed from the 1408×736 reference to 949×288. That is pixel-identical to the design's own trimmed asset. It is not recoloured or redrawn.
 - **Remlo icon:** Remlo's `public/pwa-512x512.png` (2048×2048), resized to 192, 96 and 48 px. The 48 px file is kept for completeness; the page derives its 1× and 2× sizes from the 192 and 96 files.
 
 ## Test results
 
-| Check                                                               | Result                                                                              |
-| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `npm run lint` (ESLint and Prettier)                                | Pass                                                                                |
-| `npm run check` (astro check)                                       | 0 errors, 0 warnings, 0 hints                                                       |
-| `npm test` (Vitest)                                                 | 50 passed: schemas, output guard fixtures, MetricsPanel not mounted                 |
-| `npm run build` and output guard                                    | Pass (93 files checked)                                                             |
-| Playwright at 320, 375, 390, 768, 1024 and 1440                     | 104 passed, 10 skipped (desktop-nav tests below 1024; menu tests at 1024 and above) |
-| axe on `/` and the 404, all six widths, plus the open menu          | 0 violations                                                                        |
-| CSP check: the `vercel.json` headers replayed on the preview server | 0 violations, 0 console errors                                                      |
+| Check                                                               | Result                                                                                                             |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `npm run lint` (ESLint and Prettier)                                | Pass                                                                                                               |
+| `npm run check` (astro check)                                       | 0 errors, 0 warnings, 0 hints                                                                                      |
+| `npm test` (Vitest)                                                 | 50 passed: schemas, output guard fixtures, MetricsPanel not mounted                                                |
+| `npm run build` and output guard                                    | Pass (93 files checked)                                                                                            |
+| Playwright at 320, 375, 390, 768, 1024 and 1440                     | 104 passed, 10 skipped (desktop-nav tests below 1024; menu tests at 1024 and above), including the full team names |
+| axe on `/` and the 404, all six widths, plus the open menu          | 0 violations                                                                                                       |
+| CSP check: the `vercel.json` headers replayed on the preview server | 0 violations, 0 console errors                                                                                     |
 
 The e2e suite checks:
 

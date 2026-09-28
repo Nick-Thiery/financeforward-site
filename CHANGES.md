@@ -4,7 +4,7 @@ A static Astro site for FinanceForward, built from the v0.2 handoff: the design 
 
 **Preview:** https://financeforward-site-oel0i2u3n-nick-thierys-projects.vercel.app (Vercel Authentication: sign in with your Vercel account.)
 
-> **Needs your decision: an unintended production deployment exists.** Vercel promoted the project's _first_ deployment to production, even though it was built and deployed with `--target=preview`. It is `dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`, aliased to `financeforward-site.vercel.app` and `financeforward-site-nick-thierys-projects.vercel.app`. It has the same content as the preview. It is protected by Vercel Authentication (anonymous visitors get a 302 to the Vercel sign-in page), is `noindex, nofollow`, and has no custom domain. Removing it touches production, so I left it for you. See "Deployment" below.
+> **Production deployment: created by mistake, now removed.** Vercel promoted the project's _first_ deployment (`dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`) to production, even though it was built and deployed with `--target=preview`. I wrongly reported it as protected: I had only tested its deployment URL. Its production alias `financeforward-site.vercel.app` was public and served the full site to anonymous visitors. At Nick's instruction I removed it with `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF` on 28 Sep 2026. Logged out, `financeforward-site.vercel.app`, `financeforward-site-nick-thierys-projects.vercel.app` and the deployment URL now all return 404 `DEPLOYMENT_NOT_FOUND`. The project has no production deployment. The preview above is unaffected. See "Deployment" below.
 
 ## Why a separate repo and Vercel project
 
@@ -187,13 +187,12 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
   - `X-Content-Type-Options: nosniff`
   - `Referrer-Policy: strict-origin-when-cross-origin`
   - `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()`
-- **Deployment Protection:** on. Vercel Authentication covers all deployments except custom domains, which was the project default on this plan.
+- **Deployment Protection:** Vercel Authentication (Standard Protection), the project default on this plan. It covers preview deployment URLs; it does **not** cover the production `*.vercel.app` domain, which is public. Anonymous requests to the preview URL get a 302 to Vercel sign-in.
 - **Vercel Toolbar:** turned off for this project (`enablePreviewFeedback: false`), so previews don't inject the third-party `vercel.live` script.
 - **Browser check:** I opened the preview in Chrome while signed in. It made same-origin requests only, with no CSP errors and no toolbar.
 - **What went wrong:** the project's first deployment, `dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`, was promoted to **production** by Vercel even though `.vercel/output/builds.json` records `"target": "preview"`. Vercel promotes a project's first deployment when it has no production deployment yet. I did not run `--prod`, `promote`, `alias`, `domains` or `dns`. The second deployment, the preview above, is a normal preview with no aliases.
-- **Options for the production deployment** (I have done neither):
-  - Leave it: it is protected, noindex and identical to the preview.
-  - Remove it: `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`. Removing it may just move the project back to "no production deployment", so a later deploy could be auto-promoted again.
+- **Removed:** Nick approved removing the production deployment, and I ran `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`, by ID only, which removed exactly that one deployment. Checked logged out afterwards: all three production URLs return 404 `DEPLOYMENT_NOT_FOUND`, the project has no production target, and the preview (`dpl_774qrfskFowczH4jrADo2NGdxvNT`) is still Ready and still requires Vercel sign-in.
+- **Before any future deploy:** the project has no production deployment again, so Vercel may auto-promote the next deployment to production in the same way. No further deploys until Nick says so. Whoever deploys next should check `vercel inspect <url>` for `target` straight away, and treat a `production` result as needing immediate removal.
 
 ## Choices I made
 
@@ -227,7 +226,7 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
 
 ## Confirmations
 
-- **Production and domains:** no domain, alias, DNS or promotion command was run. However, Vercel auto-promoted the first deployment to production; see "Deployment". `PUBLIC_SITE_INDEXABLE` is unset.
+- **Production and domains:** no domain, alias, DNS or promotion command was run. Vercel auto-promoted the first deployment to production, and it was publicly reachable at `financeforward-site.vercel.app` until it was removed at Nick's instruction; see "Deployment". No production deployment exists now. `PUBLIC_SITE_INDEXABLE` is unset.
 - **Remlo:** untouched. It was cloned read-only to a temp directory, and nothing was committed, pushed, deployed or run there, including its backend scripts, Supabase CLI and tests. remloapp.com was never loaded; tests abort any request to it.
 - **Outreach and tracking:** no email was sent, no accounts were created, and no analytics, cookies, forms or third-party requests were added.
 - **Private material:** `handoff/` is git-ignored and was never committed or uploaded. `review/` is committed to this private repo but never built or uploaded.

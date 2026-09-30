@@ -8,6 +8,46 @@ A static Astro site for FinanceForward, built from the v0.2 handoff: the design 
 
 > **Production deployment: created by mistake, now removed.** Vercel promoted the project's _first_ deployment (`dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`) to production, even though it was built and deployed with `--target=preview`. I wrongly reported it as protected: I had only tested its deployment URL. Its production alias `financeforward-site.vercel.app` was public and served the full site to anonymous visitors. At Nick's instruction I removed it with `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF` on 28 Sep 2026. Logged out, `financeforward-site.vercel.app`, `financeforward-site-nick-thierys-projects.vercel.app` and the deployment URL now all return 404 `DEPLOYMENT_NOT_FOUND`. The project has no production deployment. The preview above is unaffected. See "Deployment" below.
 
+## Launch tasks (30 Sep 2026, approved by Nick)
+
+Done in Nick's signed-in Chrome. No passwords or 2FA codes were typed, nothing was deleted, and no other settings were changed.
+
+| Step                           | Result                                                                                   |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| 1. Google Search Console       | **Done** (see below)                                                                     |
+| 2. Google Play Console (Remlo) | **Done**: the website change is live; the privacy policy change is in review (see below) |
+| 3. Old Lovable site            | **Skipped**: the project isn't in the Lovable account signed in on this browser          |
+| 4. Instagram                   | **Skipped**: FinanceForward's Instagram account isn't signed in                          |
+
+**1. Google Search Console:**
+
+- **Account:** financeforwardinitiative@gmail.com. It was signed in as a secondary Google account and selected explicitly.
+- **Property:** added a Domain property, `sc-domain:financeforwardsg.com`.
+- **DNS:** added one TXT record at the apex with `vercel dns add financeforwardsg.com @ TXT "google-site-verification=9Sm8irCGMBAspdPr6V-FxjuaEgj-HiIHuB88c6SvVmU"` (record `rec_b6f32260635bf0f1080655c7`). It was served by `ns1.vercel-dns.com` and Google's resolver straight away. No other DNS record was added or changed. **Keep this record**, or the property loses verification.
+- **Verification:** "Ownership verified" (method: domain name provider) on the first try.
+- **Sitemap:** submitted `https://financeforwardsg.com/sitemap-index.xml` and got "Sitemap submitted successfully". Its first status showed "Couldn't fetch", which is usual for a property minutes old; the sitemap returns 200. Recheck it in a day or two.
+- **URL Inspection:** `https://financeforwardsg.com/` showed "URL is not on Google" (unknown to Google), as expected for a new domain. Requesting indexing added it to the priority crawl queue.
+
+**2. Google Play Console (Remlo, `com.remlo.app`, developer account "FinanceForward"):**
+
+- **Before:** the dashboard showed "You have no unpublished changes".
+- **Store settings → Store listing contact details:** Website changed from `https://financeforwardsg.lovable.app/` to `https://financeforwardsg.com`. Managed publishing is off, and Play publishes contact-detail edits immediately, with no review; the console confirmed "Change published". Email and phone were unchanged.
+- **App content → Privacy policy:** it was still `https://remlo-iota.vercel.app/privacy`, so I changed it to `https://remloapp.com/privacy`.
+- **Publishing overview:** listed exactly one pending change, "App content · Privacy policy: Set Privacy policy URL to https://remloapp.com/privacy". Nothing else was pending, so I sent it for review. It now shows under "Changes in review"; Google says reviews usually take up to 7 days.
+- **Not touched:** a Play notice for Remlo, "Action by Nov 1: target API level requirements", is outside this task.
+
+**3. Old Lovable site (`financeforwardsg.lovable.app`): skipped.**
+
+- Lovable in this browser is signed in as nickthiery123@gmail.com. That account's only workspace ("Nick's Lovable") has one project, "VUS Insight Engine", not the FinanceForward site.
+- None of Nick-Thiery's GitHub repositories is the site's source.
+- Reaching the project would mean signing in to another Lovable account, which is left to Nick.
+- Logged out, the old site is still live (200).
+
+**4. Instagram: skipped.**
+
+- The account signed in on instagram.com is a personal account, not FinanceForward's, so I didn't switch accounts or edit anything.
+- Instagram's web settings also say bio links can only be edited in the mobile app.
+
 ## Permanent domain and indexing (30 Sep 2026, approved by Nick)
 
 **Domain.** Nick bought `financeforwardsg.com` on Vercel, in the same team as this project. It uses Vercel's nameservers.

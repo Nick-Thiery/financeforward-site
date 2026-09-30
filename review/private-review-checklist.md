@@ -42,8 +42,9 @@ None of these items block the v1 preview or launch. They decide what can be **ad
 
 - The app's Home card says "Get personalised money tips based on your profile", which sits awkwardly beside "doesn't give personalised, regulated financial advice".
 - The Play listing says "AI-powered scam detection"; the alerts are curated entries with AI translation.
-- The Play listing's website field points to the old Lovable site, and its privacy link to remlo-iota.vercel.app/privacy.
-- The old Lovable site still lists It's Raining Raincoats as a partner and shows unverified survey percentages.
+- ✅ Resolved 30 Sep 2026: the Play listing's website field now points to https://financeforwardsg.com (published immediately), and its privacy policy link was changed from remlo-iota.vercel.app/privacy to https://remloapp.com/privacy (sent for review; Google review pending).
+- Play Console shows an unrelated notice for Remlo: "Action by Nov 1: target API level requirements". Not handled yet.
+- ⏳ Open (30 Sep 2026): the old Lovable site (financeforwardsg.lovable.app) is still live. The redirect or unpublish was skipped because the project isn't in the Lovable account signed in on Nick's browser (nickthiery123@gmail.com). Nick to say which account owns it. The old site still lists It's Raining Raincoats as a partner and shows unverified survey percentages.
 
 ## Kept internal on purpose
 
@@ -54,3 +55,10 @@ None of these items block the v1 preview or launch. They decide what can be **ad
 ## Inspection log
 
 - On 28 Sep, around 15:05 SGT, remloapp.com was loaded once in the desktop app's browser pane to compare production with the repo. Its analytics identifiers weren't captured, so this note doesn't classify it either way.
+
+## Launch tasks log (30 Sep 2026)
+
+- **Search Console:** Domain property `sc-domain:financeforwardsg.com` added under financeforwardinitiative@gmail.com and verified by DNS TXT record (`rec_b6f32260635bf0f1080655c7` on Vercel DNS; keep it). Sitemap submitted (first status "Couldn't fetch", normal for a new property; recheck). Indexing requested for https://financeforwardsg.com/.
+- **Play Console:** website set to https://financeforwardsg.com (live); privacy policy set to https://remloapp.com/privacy (in review). No other pending changes.
+- **Lovable:** skipped; project not found in the signed-in account. The old site is still live.
+- **Instagram:** skipped. FinanceForward's account isn't signed in on the web (a personal account is), and bio links can only be edited in the mobile app. To do on the FinanceForward account in the Instagram app: set the website/bio link to https://financeforwardsg.com.

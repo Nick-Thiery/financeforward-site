@@ -2,11 +2,71 @@
 
 A static Astro site for FinanceForward, built from the v0.2 handoff: the design in `design/` and public copy v0.2 (the brief's Appendix A), verbatim. PR #1 was merged into `main` on 28 Sep 2026 (merge commit `b74b043`), and `main` is deployed to production. See "Production deployment" below.
 
-**Production:** https://financeforward-site.vercel.app (public, `noindex, nofollow`, no custom domain)
+**Production:** https://financeforwardsg.com (public and indexable since 30 Sep 2026). `www.financeforwardsg.com` and `financeforward-site.vercel.app` redirect to it with a 308.
 
 **Earlier preview:** https://financeforward-site-oel0i2u3n-nick-thierys-projects.vercel.app (Vercel Authentication: sign in with your Vercel account.)
 
 > **Production deployment: created by mistake, now removed.** Vercel promoted the project's _first_ deployment (`dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF`) to production, even though it was built and deployed with `--target=preview`. I wrongly reported it as protected: I had only tested its deployment URL. Its production alias `financeforward-site.vercel.app` was public and served the full site to anonymous visitors. At Nick's instruction I removed it with `vercel remove dpl_8znTCpUVenBaEgCMLVEqJdpdM3qF` on 28 Sep 2026. Logged out, `financeforward-site.vercel.app`, `financeforward-site-nick-thierys-projects.vercel.app` and the deployment URL now all return 404 `DEPLOYMENT_NOT_FOUND`. The project has no production deployment. The preview above is unaffected. See "Deployment" below.
+
+## Permanent domain and indexing (30 Sep 2026, approved by Nick)
+
+**Domain.** Nick bought `financeforwardsg.com` on Vercel, in the same team as this project. It uses Vercel's nameservers.
+
+| Domain                           | Setting                                | Who set it                                                               |
+| -------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
+| `financeforwardsg.com`           | Production domain, serves the site     | Already on the project when I started (added when the domain was bought) |
+| `www.financeforwardsg.com`       | 308 redirect to `financeforwardsg.com` | Added by me (project domains API)                                        |
+| `financeforward-site.vercel.app` | 308 redirect to `financeforwardsg.com` | Already configured when I started                                        |
+
+No other domain or DNS record was touched, and nothing of Remlo's or remloapp.com's.
+
+**Site config** (commit `6ecc308`):
+
+- **Astro `site`:** `https://financeforwardsg.com`. The home page has `<link rel="canonical" href="https://financeforwardsg.com/">` and Open Graph tags (`og:url`, `og:title`, `og:description`, `og:type`, `og:site_name`, `og:locale`), all built from existing copy. The 404 page has no canonical.
+- **`robots.txt`:** from `src/pages/robots.txt.ts`: `User-agent: *`, `Allow: /`, `Sitemap: https://financeforwardsg.com/sitemap-index.xml`.
+- **Sitemap:** new, from `@astrojs/sitemap` (`sitemap-index.xml` and `sitemap-0.xml`). It lists `https://financeforwardsg.com/` only; the 404 is excluded.
+- **`PUBLIC_SITE_INDEXABLE=true`:** set in the Vercel project's **Production** environment only, as a plain config value so `vercel pull` can read it. Production builds are indexable. Preview builds don't get the variable, so they stay noindex. The 404 page is always noindex.
+- **Tests:**
+  - The browser tests now build with `PUBLIC_SITE_INDEXABLE=true` and check the indexable production build: no robots meta, the canonical and `og:url`, and `robots.txt` and the sitemap. The 404 page still has to be noindex and have no canonical.
+  - Lighthouse also builds indexably and no longer skips `is-crawlable`.
+
+**Checks before deploy:**
+
+- lint and `astro check`: pass, 0 errors
+- 50 unit tests: pass
+- 110 browser tests at six widths, including axe on `/`, the 404 and the open menu, and the CSP replay: pass, 10 skipped by design
+- Lighthouse, three runs each:
+  - mobile: Performance 99, Accessibility 100, Best Practices 100, SEO 100, LCP 1.74–1.76 s, CLS 0.0001
+  - desktop: 100, 100, 100, 100, LCP 0.41–0.42 s
+  - `is-crawlable` and `canonical` both pass
+
+**Production deployment:**
+
+|                |                                                                                                                                                                                                             |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Deployment ID  | `dpl_4vyhu2tQGZotJrd9Nn3QhYvrcAhM`                                                                                                                                                                          |
+| Deployment URL | https://financeforward-site-nm2oiq56e-nick-thierys-projects.vercel.app (Vercel sign-in required)                                                                                                            |
+| Domains        | `financeforwardsg.com` (serves), `www.financeforwardsg.com` (308), `financeforward-site.vercel.app` (308), `financeforward-site-nick-thierys-projects.vercel.app` (Vercel sign-in)                          |
+| Source         | `main` at `6ecc308`                                                                                                                                                                                         |
+| Built          | locally: `vercel pull --environment=production` (the pulled env has `PUBLIC_SITE_INDEXABLE="true"`), then `vercel build --prod` (the output guard passed, 96 files), then `vercel deploy --prebuilt --prod` |
+| Created        | 2026-09-30 04:22:02 UTC · target `production` · Ready                                                                                                                                                       |
+
+**Checks while logged out.** I used curl plus a fresh Chromium session with no cookies, at 1440 and 390. Every request to a host other than `financeforwardsg.com` was blocked and recorded, and remloapp.com was never loaded.
+
+| Check                           | Result                                                                                                                                                                                                                                                          |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `https://financeforwardsg.com/` | 200, full page with all 8 sections and the five team names                                                                                                                                                                                                      |
+| Certificate                     | Valid (curl `ssl_verify_result=0`): Let's Encrypt `YR2`, CN and SAN `financeforwardsg.com`, valid 30 Sep – 29 Dec 2026 (Vercel renews it automatically)                                                                                                         |
+| `www`                           | `https://www.financeforwardsg.com/` → 308 `https://financeforwardsg.com/` (query strings kept)                                                                                                                                                                  |
+| Other redirects                 | `http://financeforwardsg.com/` → 308 https; `https://financeforward-site.vercel.app/` → 308 `https://financeforwardsg.com/`                                                                                                                                     |
+| Indexing                        | No robots meta on `/`; no `X-Robots-Tag` header on `/`, `robots.txt` or either sitemap                                                                                                                                                                          |
+| Canonical                       | `<link rel="canonical" href="https://financeforwardsg.com/">`; `og:url` matches                                                                                                                                                                                 |
+| robots.txt                      | 200 `text/plain`: `User-agent: *`, `Allow: /`, `Sitemap: https://financeforwardsg.com/sitemap-index.xml`                                                                                                                                                        |
+| Sitemap                         | `sitemap-index.xml` and `sitemap-0.xml` 200 `application/xml`; one URL, `https://financeforwardsg.com/`                                                                                                                                                         |
+| 404 page                        | `/this-page-does-not-exist` returns 404 with "This page isn't here.", `noindex, nofollow`, and the same security headers                                                                                                                                        |
+| Security headers                | CSP (`default-src 'self'` … `frame-ancestors 'none'`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()`; Vercel adds HSTS (`max-age=63072000`) |
+| Third-party requests            | None: the only host contacted was `financeforwardsg.com`; 0 blocked, 0 failed, 0 console errors, 0 broken images at both widths                                                                                                                                 |
+| Links                           | "Explore Remlo" is always exactly `https://remloapp.com`; header logo rendered                                                                                                                                                                                  |
 
 ## Production deployment (28 Sep 2026, approved by Nick)
 
@@ -143,7 +203,7 @@ The photo replaces the initials tile only while `approved: true`.
 
 **Metrics:** `src/content/metrics.ts` stays `{ enabled: false, items: [] }`. `MetricsPanel` exists but no page imports it, and a unit test and the output guard both enforce that.
 
-**Indexing:** every page is `noindex, nofollow` unless `PUBLIC_SITE_INDEXABLE=true` is set at build time. It is unset. The 404 page is always noindex.
+**Indexing:** every page is `noindex, nofollow` unless `PUBLIC_SITE_INDEXABLE=true` is set at build time. Since 30 Sep 2026 it is set in the Vercel project's Production environment only, so production is indexable and previews are not. The 404 page is always noindex.
 
 ## The output guard
 
@@ -269,7 +329,7 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
 
 ## Confirmations
 
-- **Production and domains:** Vercel auto-promoted the first deployment to production. It was publicly reachable at `financeforward-site.vercel.app` until it was removed at Nick's instruction; see "Deployment". On 28 Sep 2026, with Nick's approval, `main` was deployed to production (`dpl_61BA4k5paWsKWma3y29BC3gZAcab`). No domain, alias, DNS or promotion command was run. `PUBLIC_SITE_INDEXABLE` is unset, so the site stays noindex.
+- **Production and domains:** Vercel auto-promoted the first deployment to production. It was publicly reachable at `financeforward-site.vercel.app` until it was removed at Nick's instruction; see "Deployment". On 28 Sep 2026, with Nick's approval, `main` was deployed to production (`dpl_61BA4k5paWsKWma3y29BC3gZAcab`). On 30 Sep 2026, with Nick's approval, `www.financeforwardsg.com` was added as a 308 redirect, `PUBLIC_SITE_INDEXABLE=true` was set for Production, and `dpl_4vyhu2tQGZotJrd9Nn3QhYvrcAhM` was deployed. The site is now live and indexable at https://financeforwardsg.com. No DNS record or other domain was changed.
 - **Remlo:** untouched. It was cloned read-only to a temp directory, and nothing was committed, pushed, deployed or run there, including its backend scripts, Supabase CLI and tests. remloapp.com was never loaded; tests abort any request to it.
 - **Outreach and tracking:** no email was sent, no accounts were created, and no analytics, cookies, forms or third-party requests were added.
 - **Private material:** `handoff/` is git-ignored and was never committed or uploaded. `review/` is committed to this private repo but never built or uploaded.

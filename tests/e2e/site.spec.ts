@@ -257,7 +257,34 @@ test('review/ content is absent from the page and the server', async ({ page, re
     const response = await request.get(path);
     expect(response.status(), path).toBe(404);
   }
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+});
+
+test('the production build is indexable, with canonical, robots.txt and sitemap', async ({
+  page,
+  request,
+}) => {
+  const SITE = 'https://financeforwardsg.com/';
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', SITE);
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', SITE);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+    'content',
+    await page.title(),
+  );
+
+  const robots = await request.get('/robots.txt');
+  expect(robots.status()).toBe(200);
+  const robotsText = await robots.text();
+  expect(robotsText).toMatch(/^User-agent: \*$/m);
+  expect(robotsText).toMatch(/^Allow: \/$/m);
+  expect(robotsText).not.toMatch(/^Disallow: *\S/m);
+  expect(robotsText).toContain('Sitemap: https://financeforwardsg.com/sitemap-index.xml');
+
+  const index = await request.get('/sitemap-index.xml');
+  expect(index.status()).toBe(200);
+  expect(await index.text()).toContain('<loc>https://financeforwardsg.com/sitemap-0.xml</loc>');
+  const urls = await (await request.get('/sitemap-0.xml')).text();
+  expect([...urls.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])).toEqual([SITE]);
 });
 
 test('the feature row scrolls natively with a position indicator', async ({ page }) => {
@@ -287,7 +314,9 @@ test('404 page', async ({ page, watch }) => {
     '/',
   );
   await expect(page.getByRole('link', { name: /Explore Remlo/ })).toHaveAttribute('href', REMLO);
+  // A 404 is never indexed and has no canonical, even in the indexable build.
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 });
 
 async function expectSectionReached(page: import('@playwright/test').Page, id: string) {

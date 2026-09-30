@@ -47,12 +47,20 @@ All public copy lives in `src/content/` (see `CHANGES.md` for examples):
 
 ## Deploying
 
-Previews only, built locally so the guard runs on this machine and only `dist/` is uploaded:
+The site lives at https://financeforwardsg.com. `www.financeforwardsg.com` and `financeforward-site.vercel.app` both redirect there with a 308.
+
+Always build locally, so the output guard runs on this machine and only the build output is uploaded. Deploy only with Nick's approval.
 
 ```bash
+# Production (indexable: PUBLIC_SITE_INDEXABLE=true is set in Vercel's Production environment)
+vercel pull --yes --environment=production
+vercel build --prod
+vercel deploy --prebuilt --prod
+
+# Preview (noindex: the variable isn't set for Preview)
 vercel pull --yes --environment=preview
 vercel build
 vercel deploy --prebuilt
 ```
 
-The Vercel project is not connected to Git, and `vercel.json` disables Git deployments of `main` as a second safeguard. Production and domains wait for Nick's approval.
+The Vercel project is not connected to Git, and `vercel.json` disables Git deployments of `main` as a second safeguard, so pushing never deploys.

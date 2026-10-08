@@ -49,8 +49,10 @@ const canonical = noindex || !Astro.site ? undefined : new URL(Astro.url.pathnam
     )}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#ffffff" />
-    {/* Blank, transparent icon until an approved FinanceForward favicon exists. */}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/* The gold chart mark, cropped from the logo (8 Oct 2026). */}
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href={newsreader500} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={atkinson400} as="font" type="font/woff2" crossorigin />
   </head>

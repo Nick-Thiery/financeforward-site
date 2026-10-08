@@ -182,7 +182,7 @@ Screenshots of the live Team section are in `artifacts/production/team-1440.png`
 ├── vitest.config.ts · playwright.config.ts · lighthouserc.{shared,mobile,desktop}.cjs
 ├── design/{clean,annotated}/*.png      reference boards (never served)
 ├── review/                             private: checklist + private-terms.txt (never built)
-├── public/favicon.svg                  blank, transparent icon (see choices)
+├── public/favicon.ico · icon-192.png · apple-touch-icon.png   the chart mark (see choices)
 ├── scripts/check-output.mjs            the output guard
 ├── src/
 │   ├── assets/brand/financeforward-logo.png
@@ -356,7 +356,7 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
 - **Current section:** the footer counts as part of Contact, so "Contact" stays current at the bottom of the page.
 - **Accessible names:** use the copy. For example, the at-a-glance list is labelled "Remlo at a glance", and the language lists and feature row are labelled by their visible labels. The mobile "Swipe · 1 of 3" hint is `aria-hidden`, since the list already announces its length.
 - **Font fallbacks:** metric-matched fallback faces (Georgia and Arial with `size-adjust` and ascent/descent overrides) keep text from shifting when the web fonts load.
-- **Favicon:** a blank, transparent `favicon.svg`, so browsers don't log a missing `/favicon.ico`. Neither logo works as a favicon without cropping or redrawing, which the brief rules out. Swap it in once you have an approved mark.
+- **Favicon (8 Oct 2026, at Nick's request):** the gold chart mark, cropped from `financeforward-logo.png` without redrawing, its off-white background made transparent. `favicon.ico` holds 16, 32 and 48 px; `icon-192.png` is the same mark at 192 px; `apple-touch-icon.png` puts it on white at 180 px. This replaces the blank `favicon.svg`.
 - **Extra design tokens:** a few secondary colours from the design exports aren't in the token table, such as the header hairline `#ECE8DF`, the email card ground `#FBFAF7`, the Remlo chip line `#F0D9C4` and the Remlo outline border `#E3B999`. They are added to `tokens.css` as named tokens.
 - **Updates heading:** the Updates section needs a heading, and the copy only names it "Updates". `site.ts` uses that word until you write one; it isn't rendered in v1.
 - **Tooling adjustments:**

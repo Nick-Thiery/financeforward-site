@@ -1,9 +1,16 @@
 ---
 import { site } from '../content/site';
+
+interface Props {
+  /** The link text, in the page's language. Defaults to the English label. */
+  label?: string;
+}
+
+const { label = site.header.skipLink } = Astro.props;
 ---
 
 <a class="skip-link" href="#main">
-  {site.header.skipLink}
+  {label}
 </a>
 
 <style>

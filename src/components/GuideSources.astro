@@ -1,0 +1,42 @@
+---
+/*
+ * Sources and the date everything was last checked. The official pages are in
+ * English, so on other languages the list is marked lang="en".
+ */
+import { sources, type SourceId } from '../content/guides/registry';
+import type { GuideUi } from '../content/guides/types';
+
+interface Props {
+  ids: SourceId[];
+  ui: GuideUi;
+  english: boolean;
+}
+
+const { ids, ui, english } = Astro.props;
+---
+
+<section class="guide-block" id="sources" aria-labelledby="sources-title">
+  <h2 id="sources-title" class="guide-h2">
+    {ui.sourcesHeading}
+  </h2>
+  <p>{ui.sourcesIntro}</p>
+  <p class="guide-checked">
+    <strong>{ui.checkedLabel}:</strong> {ui.checkedOn}
+  </p>
+  {!english && <p>{ui.sourcesInEnglish}</p>}
+  <ul class="guide-sources" lang="en">
+    {ids.map((id) => {
+      const source = sources[id];
+      return (
+        <li>
+          <a href={source.url} rel="noopener">
+            {source.title}
+          </a>
+          <span class="guide-source-meta">
+            {source.publisher}. {source.dated}.
+          </span>
+        </li>
+      );
+    })}
+  </ul>
+</section>

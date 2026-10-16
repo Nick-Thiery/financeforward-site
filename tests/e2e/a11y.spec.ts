@@ -3,8 +3,16 @@ import { join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from './fixtures';
 
-/* axe on the home page and the 404 page at every width: zero violations. */
-for (const path of ['/', '/this-page-does-not-exist']) {
+/*
+ * axe on the home page, the 404 page and every guide page (two topics in seven
+ * languages, including the translations that are not published yet) at every
+ * width: zero violations.
+ */
+const guidePaths = ['', '/bn', '/my', '/zh', '/ta', '/th', '/vi'].flatMap((prefix) => [
+  `${prefix}/loan-sharks/`,
+  `${prefix}/sending-money-home/`,
+]);
+for (const path of ['/', '/this-page-does-not-exist', ...guidePaths]) {
   test(`axe: no violations on ${path}`, async ({ page, watch }) => {
     await page.goto(path);
     await page.evaluate(() => document.fonts.ready);

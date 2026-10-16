@@ -38,6 +38,11 @@ All public copy lives in `src/content/` (see `CHANGES.md` for examples):
 | `updates.ts`   | Dated updates; the section appears only with an approved entry |
 | `images.ts`    | Image registry; only `approved: true` images render            |
 | `metrics.ts`   | Public figures: disabled, and the panel is not mounted         |
+| `guides/`      | The guide pages, in seven languages (see below)                |
+
+## Guide pages
+
+`/loan-sharks/` and `/sending-money-home/` are searchable guides in English, with translations in Bengali, Burmese, Simplified Chinese, Tamil, Thai and Vietnamese (`/bn/loan-sharks/` and so on). Copy is in `src/content/guides/<topic>/<language>.ts`; phone numbers, official links and the sources are in `src/content/guides/registry.ts`, so a translation cannot change them. Each page has `reviewed`: translations start as `reviewed: false` (noindex, no sitemap entry, no hreflang) until a native speaker has checked them. See `NATIVE-REVIEW.md`.
 
 ## Private files
 

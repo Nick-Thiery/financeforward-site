@@ -1,0 +1,44 @@
+---
+/*
+ * Footer of a guide page, in the page's language: the same pieces as the home
+ * page footer (logo, mission, disclaimer, copyright), without the in-page nav.
+ */
+import { links, site } from '../content/site';
+import type { GuideUi } from '../content/guides/types';
+import Logo from './Logo.astro';
+import TextLink from './TextLink.astro';
+
+interface Props {
+  ui: GuideUi;
+}
+
+const { ui } = Astro.props;
+---
+
+<footer class="guide-footer">
+  <div class="container guide-footer__inner">
+    <a class="guide-footer__plate" href="/">
+      <Logo size="footer" />
+    </a>
+    <p class="guide-footer__mission">{ui.footerMission}</p>
+    <ul class="guide-footer__links">
+      <li>
+        <TextLink href="/" tone="inherit" weight="regular" padded>
+          {ui.homeLink}
+        </TextLink>
+      </li>
+      <li>
+        <TextLink href={links.remlo} external tone="inherit" weight="regular" padded>
+          {ui.remloExplore}
+        </TextLink>
+      </li>
+      <li>
+        <TextLink href={links.googlePlay} external tone="inherit" weight="regular" padded>
+          Google Play
+        </TextLink>
+      </li>
+    </ul>
+    <p class="guide-footer__disclaimer">{ui.disclaimer}</p>
+    <p class="guide-footer__copyright">{site.footer.copyright}</p>
+  </div>
+</footer>

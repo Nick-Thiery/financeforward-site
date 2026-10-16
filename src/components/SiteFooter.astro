@@ -4,6 +4,8 @@
  * disclaimer, © and "Back to top". The FinanceForward group lists only
  * sections that render.
  */
+import { guidePages } from '../content/guides';
+import { guideNavLabels } from '../content/guides/ui';
 import { footerNavItems } from '../content/sections';
 import { links, site } from '../content/site';
 import Logo from './Logo.astro';
@@ -11,6 +13,8 @@ import TextLink from './TextLink.astro';
 
 const footer = site.footer;
 const [localPart, domain] = links.email.split('@');
+// The published English guides, so the home page links to them.
+const guideLinks = guidePages.filter((page) => page.lang === 'en' && page.content.reviewed);
 ---
 
 <footer class="site-footer">
@@ -62,6 +66,13 @@ const [localPart, domain] = links.email.split('@');
                 <li>
                   <TextLink href={item.href} tone="inherit" weight="regular" padded>
                     {item.label}
+                  </TextLink>
+                </li>
+              ))}
+              {guideLinks.map((guide) => (
+                <li>
+                  <TextLink href={guide.path} tone="inherit" weight="regular" padded>
+                    {guideNavLabels[guide.topic]}
                   </TextLink>
                 </li>
               ))}

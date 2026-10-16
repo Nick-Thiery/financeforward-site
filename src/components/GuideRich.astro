@@ -1,0 +1,31 @@
+---
+/*
+ * Guide copy with its tokens resolved: phone numbers become tap-to-call links
+ * and official links come from the registry (see content/guides/rich.ts).
+ */
+import { parseRich } from '../content/guides/rich';
+import { outlinks, phones, telHref } from '../content/guides/registry';
+import { languageCount } from '../content/languages';
+
+interface Props {
+  text: string;
+}
+
+const segments = parseRich(Astro.props.text);
+---
+
+{segments.map((segment) =>
+  segment.kind === 'text' ? (
+    segment.text
+  ) : segment.kind === 'tel' ? (
+    <a class="guide-tel" href={telHref(phones[segment.id].display)}>
+      {phones[segment.id].display}
+    </a>
+  ) : segment.kind === 'link' ? (
+    <a class="guide-link" href={outlinks[segment.id].url} rel="noopener">
+      {segment.text}
+    </a>
+  ) : (
+    String(languageCount)
+  ),
+)}

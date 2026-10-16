@@ -1,0 +1,180 @@
+---
+/*
+ * A guide page: one topic in one language. Arranges the content in
+ * content/guides/; it holds no copy of its own except the English draft
+ * notice. Section headings are questions, because the sections are also the
+ * page's FAQ structured data (see content/guides/seo.ts).
+ */
+import '../styles/guide.css';
+import { getGuide, topicSources, type GuidePageData } from '../content/guides';
+import { guideLangs, guideTopics } from '../content/guides/languages';
+import { phones, outlinks, telHref } from '../content/guides/registry';
+import { alternatesFor, faqJsonLd, isPublished } from '../content/guides/seo';
+import { draftNotice, guideUi } from '../content/guides/ui';
+import { links, site } from '../content/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from './Button.astro';
+import GuideFooter from './GuideFooter.astro';
+import GuideRich from './GuideRich.astro';
+import GuideSources from './GuideSources.astro';
+import GuideSwitcher from './GuideSwitcher.astro';
+import SiteHeader from './SiteHeader.astro';
+import SkipLink from './SkipLink.astro';
+
+interface Props {
+  page: GuidePageData;
+}
+
+const { page } = Astro.props;
+const { content, topic, lang } = page;
+const meta = guideLangs[lang];
+const ui = guideUi[lang];
+const published = isPublished(page);
+const english = lang === 'en';
+const englishPage = getGuide(topic, 'en');
+const otherTopic = guideTopics.find((candidate) => candidate !== topic)!;
+const related = getGuide(otherTopic, lang);
+---
+
+<BaseLayout
+  title={`${content.title} — ${site.brand.name}`}
+  description={content.description}
+  lang={meta.htmlLang}
+  dir={meta.dir}
+  ogLocale={meta.ogLocale}
+  draft={!published}
+  alternates={alternatesFor(page)}
+  jsonLd={faqJsonLd(page)}
+  latinFonts={english}
+>
+  <SkipLink label={ui.skipLink} />
+  <SiteHeader variant="minimal" />
+  <main id="main" tabindex="-1" class="guide" data-guide-lang={lang} data-guide-topic={topic}>
+    <article class="guide-wrap">
+      <header class="guide-head">
+        {!published && (
+          <aside class="guide-draft" lang="en" dir="ltr" data-draft-notice>
+            <strong>{draftNotice.title}</strong>
+            {draftNotice.text}
+            <a href={englishPage.path}>{draftNotice.englishLink}</a>
+          </aside>
+        )}
+        <p class="guide-eyebrow">{content.eyebrow}</p>
+        <h1 class="guide-title">{content.heading}</h1>
+        <p class="guide-lead">
+          <GuideRich text={content.lead} />
+        </p>
+        <GuideSwitcher topic={topic} current={lang} label={ui.switcherLabel} />
+      </header>
+
+      {content.callout && (
+        <aside class="guide-callout" aria-labelledby="callout-title">
+          <h2 id="callout-title">{content.callout.title}</h2>
+          <p>
+            <GuideRich text={content.callout.body} />
+          </p>
+        </aside>
+      )}
+
+      {content.sections.map((section) => (
+        <section class="guide-block" id={section.id} aria-labelledby={`${section.id}-title`}>
+          <h2 id={`${section.id}-title`} class="guide-h2">
+            {section.heading}
+          </h2>
+          {section.paragraphs?.map((paragraph) => (
+            <p>
+              <GuideRich text={paragraph} />
+            </p>
+          ))}
+          {section.items && (
+            <ul class="guide-list">
+              {section.items.map((item) => (
+                <li>
+                  <GuideRich text={item} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {section.links?.map((link) => (
+            <p>
+              <a
+                class="guide-link"
+                href={outlinks[link.ref as keyof typeof outlinks].url}
+                rel="noopener"
+              >
+                {link.label}
+              </a>
+            </p>
+          ))}
+          {section.note && (
+            <p class="guide-note">
+              <GuideRich text={section.note} />
+            </p>
+          )}
+        </section>
+      ))}
+
+      {content.contacts && (
+        <section class="guide-block" id="contacts" aria-labelledby="contacts-title">
+          <h2 id="contacts-title" class="guide-h2">
+            {content.contacts.heading}
+          </h2>
+          <ul class="guide-contacts">
+            {content.contacts.items.map((item) => (
+              <li>
+                <div>
+                  <p class="guide-contact__label">{item.label}</p>
+                  <p class="guide-contact__detail">{item.detail}</p>
+                </div>
+                {item.ref in phones ? (
+                  <a
+                    class="guide-tel guide-contact__action"
+                    href={telHref(phones[item.ref as keyof typeof phones].display)}
+                  >
+                    {phones[item.ref as keyof typeof phones].display}
+                  </a>
+                ) : (
+                  <a
+                    class="guide-link guide-contact__action"
+                    href={outlinks[item.ref as keyof typeof outlinks].url}
+                    rel="noopener"
+                  >
+                    {item.linkLabel}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+          {content.contacts.note && <p class="guide-note">{content.contacts.note}</p>}
+        </section>
+      )}
+
+      <section class="guide-remlo" id="remlo" aria-labelledby="remlo-title">
+        <h2 id="remlo-title" class="guide-h2">
+          {content.remlo.heading}
+        </h2>
+        <p>
+          <GuideRich text={content.remlo.body} />
+        </p>
+        <div class="guide-remlo__actions">
+          <Button href={links.remlo} variant="remlo" external fullOnMobile>
+            {ui.remloExplore}
+          </Button>
+          <Button href={links.googlePlay} variant="remlo-outline" external fullOnMobile>
+            {ui.remloGooglePlay}
+          </Button>
+        </div>
+        <p class="guide-remlo__note">{ui.remloIphone}</p>
+      </section>
+
+      {published && related.content.reviewed && (
+        <p class="guide-related">
+          {ui.relatedLabel}: <a href={related.path}>{related.content.heading}</a>
+        </p>
+      )}
+
+      <GuideSources ids={topicSources[topic]} ui={ui} english={english} />
+    </article>
+  </main>
+  <GuideFooter ui={ui} />
+</BaseLayout>

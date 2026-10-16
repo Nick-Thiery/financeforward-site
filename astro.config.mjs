@@ -1,6 +1,7 @@
 // @ts-check
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
+import { sitemapEntry } from './src/content/guides/seo.ts';
 
 // Fully static output: no adapter, no server routes.
 export default defineConfig({
@@ -23,7 +24,24 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [
-    // sitemap-index.xml + sitemap-0.xml; the 404 page is never listed.
-    sitemap({ filter: (page) => !/\/404\/?$/.test(new URL(page).pathname) }),
+    // sitemap-index.xml + sitemap-0.xml. Never listed: the 404 page, and guide
+    // pages whose translation has not been checked by a native speaker
+    // (`reviewed: false`). Published guide pages carry hreflang alternates.
+    sitemap({
+      filter: (page) => {
+        const { pathname } = new URL(page);
+        if (/\/404\/?$/.test(pathname)) return false;
+        return sitemapEntry(pathname)?.published ?? true;
+      },
+      serialize: (item) => {
+        const entry = sitemapEntry(new URL(item.url).pathname);
+        if (!entry) return item;
+        return {
+          ...item,
+          lastmod: entry.lastmod,
+          links: entry.links.length > 0 ? entry.links : undefined,
+        };
+      },
+    }),
   ],
 });

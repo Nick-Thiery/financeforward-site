@@ -284,7 +284,13 @@ test('the production build is indexable, with canonical, robots.txt and sitemap'
   expect(index.status()).toBe(200);
   expect(await index.text()).toContain('<loc>https://financeforwardsg.com/sitemap-0.xml</loc>');
   const urls = await (await request.get('/sitemap-0.xml')).text();
-  expect([...urls.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])).toEqual([SITE]);
+  // The home page and the two English guides. Translations that a native
+  // speaker has not checked yet (`reviewed: false`) are not listed.
+  expect([...urls.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])).toEqual([
+    SITE,
+    `${SITE}loan-sharks/`,
+    `${SITE}sending-money-home/`,
+  ]);
 });
 
 test('the feature row scrolls natively with a position indicator', async ({ page }) => {

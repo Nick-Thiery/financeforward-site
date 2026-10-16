@@ -34,7 +34,7 @@ const allNav: NavItem[] = (Object.keys(site.nav) as SectionId[]).map((id) => ({
 export const navItems = allNav.filter((item) => renders[item.id]);
 
 /** The footer's FinanceForward group. */
-const footerIds: SectionId[] = ['what', 'approach', 'measure', 'updates', 'team'];
+const footerIds: SectionId[] = ['what', 'approach', 'measure', 'updates', 'team', 'contact'];
 export const footerNavItems = allNav.filter(
   (item) => footerIds.includes(item.id) && renders[item.id],
 );

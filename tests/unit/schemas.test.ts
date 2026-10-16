@@ -32,7 +32,7 @@ describe('content modules (as shipped)', () => {
       'zh',
       'th',
       'ur',
-      'ne',
+      'vi',
     ]);
     expect(languages.find((l) => l.code === 'ur')?.dir).toBe('rtl');
     expect(languages.filter((l) => l.dir === 'rtl')).toHaveLength(1);
@@ -71,7 +71,7 @@ describe('content modules (as shipped)', () => {
   it('marks the supplied images approved, and alt text comes from the copy', () => {
     expect(images.every((image) => image.approved)).toBe(true);
     expect(images.find((i) => i.id === 'remlo-welcome')?.alt).toBe(site.hero.phoneAlt);
-    expect(images.find((i) => i.id === 'remlo-welcome')?.capturedFromCommit).toBe('1eabe26');
+    expect(images.find((i) => i.id === 'remlo-welcome')?.capturedFromCommit).toBe('f32e108');
   });
 
   it('builds the header nav in page order', () => {

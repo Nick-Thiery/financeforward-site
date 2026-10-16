@@ -16,7 +16,7 @@ import remloScamQuiz from '../assets/screens/remlo-08-scam-quiz.png';
 import { imagesSchema, type ImageEntry } from './schemas';
 import { site } from './site';
 
-const REMLO_COMMIT = '1eabe26';
+const REMLO_COMMIT = 'f32e108';
 
 export const images = imagesSchema.parse([
   {

@@ -375,3 +375,11 @@ JS and CSS are transfer sizes. Reports are in `artifacts/lighthouse/`.
 - **Private material:** `handoff/` is git-ignored and was never committed or uploaded. `review/` is committed to this private repo but never built or uploaded.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+## 16 Oct 2026 refresh (branch `claude/site-refresh`)
+
+- **Languages:** Nepali replaced by Vietnamese (`vi`, Tiếng Việt) in `src/content/languages.ts`, to match Remlo at `f32e108`. The count stays 12. The hero panel, the Remlo chips and the "12 languages" wording derive from that list.
+- **Indonesian label:** "Indonesia" is now "Bahasa Indonesia" on the site. The caption under the language panel no longer says the names appear "as they appear in the app" (the app still shows "Indonesia"), and now reads "Language names in their own scripts."
+- **Footer:** the FinanceForward link group now ends with "Contact" (`#contact`).
+- **Screenshots:** all three recaptured from a local build of Remlo `f32e108` (placeholder Supabase env, no PostHog key, guest mode, 390×844 @2x). The Budget screen had changed; the other two were recaptured so the set looks consistent. remloapp.com was not loaded.
+- **Alt text:** the Budget alt now mentions the Add Income button and no longer lists Phone Plan, which is out of frame in the new capture.

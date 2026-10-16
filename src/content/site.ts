@@ -71,7 +71,7 @@ export const site = {
     ],
     glanceLink: 'See what Remlo does',
     languagesLabel: 'Remlo is available in',
-    languagesCaption: 'Language names as they appear in the app.',
+    languagesCaption: 'Language names in their own scripts.',
     phoneAlt:
       'Remlo\'s welcome screen: a language selector, the message "Free money guidance for workers in Singapore", a Get started button and the note "No money transfers. No bank connection or banking passwords needed."',
   },
@@ -156,7 +156,7 @@ export const site = {
       budget: {
         title: 'Plan a budget and savings goals',
         body: "Plan the month's income and spending, including money for home, and track progress towards goals such as an emergency fund.",
-        alt: "Remlo's Budget Planner: a monthly income field and example expense categories including rent or dormitory, groceries, transport and phone plan, each with a Log Spend button.",
+        alt: "Remlo's Budget Planner: a monthly income field with an Add Income button, and example expense categories including rent or dormitory, groceries and transport, each with a Log Spend button.",
       },
       scamQuiz: {
         title: 'Practise spotting scams',

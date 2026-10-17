@@ -209,3 +209,110 @@ describe('output guard: review/ never ships', () => {
     expect(terms.length).toBeGreaterThanOrEqual(18);
   });
 });
+
+describe('output guard: search-engine consistency', () => {
+  const ORIGIN = 'https://financeforwardsg.com';
+  const alt = (hreflang: string, path: string) =>
+    `<link rel="alternate" hreflang="${hreflang}" href="${ORIGIN}${path}">`;
+  const guide = (path: string, options: { robots?: string; alternates?: string[] } = {}) =>
+    `<!doctype html><html lang="en"><head><title>T</title>` +
+    (options.robots ? `<meta name="robots" content="${options.robots}">` : '') +
+    (options.robots === 'noindex' ? '' : `<link rel="canonical" href="${ORIGIN}${path}">`) +
+    (options.alternates ?? []).join('') +
+    `</head><body>${section('Text')}</body></html>`;
+  const sitemap = (...paths: string[]) =>
+    `<urlset>${paths.map((p) => `<url><loc>${ORIGIN}${p}</loc></url>`).join('')}</urlset>`;
+
+  // English and Bengali, both published and pointing at each other.
+  const pair = [alt('en', '/g/'), alt('bn', '/bn/g/'), alt('x-default', '/g/')];
+
+  it('passes published pages with reciprocal hreflang, and a draft that is left out', () => {
+    expect(
+      run({
+        'g/index.html': guide('/g/', { alternates: pair }),
+        'bn/g/index.html': guide('/bn/g/', { alternates: pair }),
+        'th/g/index.html': guide('/th/g/', { robots: 'noindex' }),
+        'sitemap-0.xml': sitemap('/g/', '/bn/g/'),
+      }),
+    ).toEqual([]);
+  });
+
+  it('fails a draft page that is in the sitemap', () => {
+    const problems = run({
+      'g/index.html': guide('/g/'),
+      'th/g/index.html': guide('/th/g/', { robots: 'noindex' }),
+      'sitemap-0.xml': sitemap('/g/', '/th/g/'),
+    });
+    expect(problems).toContain('th/g/index.html: a draft page is in the sitemap');
+  });
+
+  it('fails a draft page with a canonical or hreflang, or one that others point at', () => {
+    const problems = run({
+      'g/index.html': guide('/g/', {
+        alternates: [alt('en', '/g/'), alt('th', '/th/g/'), alt('x-default', '/g/')],
+      }),
+      'th/g/index.html':
+        '<!doctype html><html lang="th"><head><title>T</title><meta name="robots" content="noindex">' +
+        `<link rel="canonical" href="${ORIGIN}/th/g/">${alt('en', '/g/')}</head><body>${section('Text')}</body></html>`,
+      'sitemap-0.xml': sitemap('/g/'),
+    });
+    expect(problems).toEqual(
+      expect.arrayContaining([
+        'th/g/index.html: a draft page (noindex) has a canonical',
+        'th/g/index.html: a draft page has hreflang',
+        "th/g/index.html: a draft page is the target of another page's hreflang",
+        'g/index.html: hreflang points at a draft page /th/g/',
+      ]),
+    );
+  });
+
+  it('fails hreflang that is not reciprocal, lacks x-default or self-reference', () => {
+    const problems = run({
+      'g/index.html': guide('/g/', { alternates: pair }),
+      'bn/g/index.html': guide('/bn/g/', {
+        alternates: [alt('bn', '/bn/g/'), alt('x-default', '/g/')],
+      }),
+      'sitemap-0.xml': sitemap('/g/', '/bn/g/'),
+    });
+    expect(problems.some((p) => p.includes('not reciprocal'))).toBe(true);
+    const noDefault = run({
+      'g/index.html': guide('/g/', { alternates: [alt('en', '/g/'), alt('bn', '/bn/g/')] }),
+      'bn/g/index.html': guide('/bn/g/', { alternates: [alt('en', '/g/'), alt('bn', '/bn/g/')] }),
+      'sitemap-0.xml': sitemap('/g/', '/bn/g/'),
+    });
+    expect(noDefault).toEqual(
+      expect.arrayContaining([
+        'g/index.html: hreflang needs exactly one x-default',
+        'bn/g/index.html: hreflang needs exactly one x-default',
+      ]),
+    );
+    const noSelf = run({
+      'g/index.html': guide('/g/', { alternates: [alt('bn', '/bn/g/'), alt('x-default', '/g/')] }),
+      'bn/g/index.html': guide('/bn/g/'),
+      'sitemap-0.xml': sitemap('/g/', '/bn/g/'),
+    });
+    expect(noSelf).toContain('g/index.html: hreflang does not include the page itself');
+  });
+
+  it('fails hreflang that points at a missing page or at a page not in the sitemap', () => {
+    const problems = run({
+      'g/index.html': guide('/g/', { alternates: pair }),
+      'sitemap-0.xml': sitemap('/g/'),
+    });
+    expect(problems).toContain(
+      'g/index.html: hreflang points at /bn/g/, which is not in the build',
+    );
+    const unlisted = run({
+      'g/index.html': guide('/g/', { alternates: pair }),
+      'bn/g/index.html': guide('/bn/g/', { alternates: pair }),
+      'sitemap-0.xml': sitemap('/g/'),
+    });
+    expect(unlisted.some((p) => p.includes('not in the sitemap'))).toBe(true);
+  });
+
+  it('fails a sitemap entry for a page that does not exist', () => {
+    expect(
+      run({ 'index.html': page(section('Hi')), 'sitemap-0.xml': sitemap('/', '/gone/') }),
+    ).toContain('sitemap: /gone/ is not in the build');
+  });
+});

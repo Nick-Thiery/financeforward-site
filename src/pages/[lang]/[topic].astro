@@ -1,0 +1,19 @@
+---
+/* Translated guide pages: /bn/loan-sharks/, /th/sending-money-home/, and so on. */
+import GuidePage from '../../components/GuidePage.astro';
+import { guidePages } from '../../content/guides';
+import { guideLangs } from '../../content/guides/languages';
+
+export function getStaticPaths() {
+  return guidePages
+    .filter((page) => page.lang !== 'en')
+    .map((page) => ({
+      params: { lang: guideLangs[page.lang].prefix, topic: page.topic },
+      props: { page },
+    }));
+}
+
+const { page } = Astro.props;
+---
+
+<GuidePage page={page} />

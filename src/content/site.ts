@@ -10,6 +10,9 @@ import { copySchema } from './schemas';
 
 export const links = {
   remlo: 'https://remloapp.com',
+  // Guide pages link with a campaign tag so their reach can be measured separately
+  // (needs the ff-site / web codes in Remlo's analyticsPolicy.js).
+  remloFromGuide: 'https://remloapp.com/?source=ff-site&channel=web',
   googlePlay: 'https://play.google.com/store/apps/details?id=com.remlo.app',
   remloPrivacy: 'https://remloapp.com/privacy',
   remloTerms: 'https://remloapp.com/terms',

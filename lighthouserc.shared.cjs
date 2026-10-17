@@ -11,7 +11,11 @@ module.exports = ({ preset }) => ({
       startServerCommand:
         'PUBLIC_SITE_INDEXABLE=true npm run build && npx astro preview --host 127.0.0.1 --port 4322 --ignore-lock',
       startServerReadyPattern: '4322',
-      url: ['http://127.0.0.1:4322/'],
+      url: [
+        'http://127.0.0.1:4322/',
+        'http://127.0.0.1:4322/loan-sharks/',
+        'http://127.0.0.1:4322/sending-money-home/',
+      ],
       numberOfRuns: 3,
       settings: {
         ...(preset === 'desktop' ? { preset: 'desktop' } : {}),

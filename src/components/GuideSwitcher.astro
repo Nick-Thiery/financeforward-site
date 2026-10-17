@@ -1,0 +1,43 @@
+---
+/*
+ * "Read this page in": links to the other published versions of a topic, each
+ * labelled in its own script. Unreviewed versions are never listed, except the
+ * page the reader is already on. Nothing is rendered when there is only one.
+ */
+import { guideLangs, type GuideLang, type GuideTopic } from '../content/guides/languages';
+import { guidePages } from '../content/guides';
+import { isPublished } from '../content/guides/seo';
+
+interface Props {
+  topic: GuideTopic;
+  current: GuideLang;
+  label: string;
+}
+
+const { topic, current, label } = Astro.props;
+const versions = guidePages.filter(
+  (page) => page.topic === topic && (isPublished(page) || page.lang === current),
+);
+---
+
+{versions.length > 1 && (
+  <nav class="guide-switcher" aria-label={label}>
+    <ul>
+      {versions.map((page) => {
+        const meta = guideLangs[page.lang];
+        return (
+          <li>
+            <a
+              href={page.path}
+              lang={meta.htmlLang}
+              hreflang={meta.hreflang}
+              aria-current={page.lang === current ? 'page' : undefined}
+            >
+              {meta.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+)}

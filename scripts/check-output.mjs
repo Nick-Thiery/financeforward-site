@@ -13,6 +13,11 @@
  *   4. a <section> without a heading or without text
  *   5. data-component="metrics" (the metrics panel must not be mounted)
  *   6. anything from review/ in dist/, or any src/ file importing from review/
+ *   7. search-engine consistency (see checkSeo): a draft page (robots exactly
+ *      "noindex", i.e. a translation not yet checked by a native speaker) must
+ *      have no canonical or hreflang, must not be in the sitemap and must not
+ *      be an hreflang target; hreflang sets must be self-referencing,
+ *      reciprocal, include x-default, and point only at pages that exist
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, extname, join, relative, resolve } from 'node:path';
@@ -163,6 +168,114 @@ export function checkSourceImports(srcDir) {
   return problems;
 }
 
+/** Every <loc> in the sitemap files of a build, as pathnames. Undefined if there is no sitemap. */
+function sitemapPaths(files) {
+  const maps = files.filter((path) => /sitemap-\d+\.xml$/.test(path));
+  if (maps.length === 0) return undefined;
+  const paths = new Set();
+  for (const path of maps) {
+    for (const match of readFileSync(path, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)) {
+      paths.add(new URL(match[1]).pathname);
+    }
+  }
+  return paths;
+}
+
+const withSlash = (pathname) => (pathname.endsWith('/') ? pathname : `${pathname}/`);
+
+/**
+ * Search-engine consistency across the whole build. Returns problems.
+ * A page's address is taken from its file path, not from its own tags, so a
+ * wrong canonical cannot hide a problem.
+ */
+export function checkSeo(distDir, files) {
+  const problems = [];
+  const pages = new Map();
+  for (const path of files) {
+    if (!/\.html?$/i.test(path)) continue;
+    const rel = relative(distDir, path).split('\\').join('/');
+    if (!/(^|\/)index\.html$/.test(rel)) continue;
+    const pathname = withSlash(`/${rel.replace(/index\.html$/, '')}`.replace(/\/+$/, '/'));
+    const root = parse(readFileSync(path, 'utf8'), { comment: false });
+    const robots = (root.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '')
+      .trim()
+      .toLowerCase();
+    pages.set(pathname, {
+      rel,
+      draft: robots === 'noindex',
+      canonical: root.querySelector('link[rel="canonical"]')?.getAttribute('href'),
+      alternates: root.querySelectorAll('link[rel="alternate"][hreflang]').map((link) => ({
+        hreflang: link.getAttribute('hreflang'),
+        pathname: withSlash(new URL(link.getAttribute('href'), 'https://x.invalid').pathname),
+      })),
+    });
+  }
+
+  const inSitemap = sitemapPaths(files);
+  const alternateTargets = new Set();
+  for (const page of pages.values()) {
+    for (const alternate of page.alternates) alternateTargets.add(alternate.pathname);
+  }
+
+  for (const [pathname, page] of pages) {
+    if (page.draft) {
+      if (page.canonical) problems.push(`${page.rel}: a draft page (noindex) has a canonical`);
+      if (page.alternates.length > 0) problems.push(`${page.rel}: a draft page has hreflang`);
+      if (inSitemap?.has(pathname)) problems.push(`${page.rel}: a draft page is in the sitemap`);
+      if (alternateTargets.has(pathname)) {
+        problems.push(`${page.rel}: a draft page is the target of another page's hreflang`);
+      }
+    }
+    if (page.alternates.length === 0) continue;
+
+    const selfReference = page.alternates.some(
+      (alternate) => alternate.pathname === pathname && alternate.hreflang !== 'x-default',
+    );
+    if (!selfReference) {
+      problems.push(`${page.rel}: hreflang does not include the page itself`);
+    }
+    if (page.alternates.filter((alternate) => alternate.hreflang === 'x-default').length !== 1) {
+      problems.push(`${page.rel}: hreflang needs exactly one x-default`);
+    }
+    const codes = page.alternates.map((alternate) => alternate.hreflang);
+    if (new Set(codes).size !== codes.length)
+      problems.push(`${page.rel}: hreflang repeats a language`);
+    for (const alternate of page.alternates) {
+      const target = pages.get(alternate.pathname);
+      if (!target) {
+        problems.push(
+          `${page.rel}: hreflang points at ${alternate.pathname}, which is not in the build`,
+        );
+        continue;
+      }
+      if (target.draft)
+        problems.push(`${page.rel}: hreflang points at a draft page ${alternate.pathname}`);
+      if (inSitemap && !inSitemap.has(alternate.pathname)) {
+        problems.push(
+          `${page.rel}: hreflang points at ${alternate.pathname}, which is not in the sitemap`,
+        );
+      }
+      const back = target.alternates.map((link) => `${link.hreflang} ${link.pathname}`);
+      for (const mine of page.alternates) {
+        if (!back.includes(`${mine.hreflang} ${mine.pathname}`)) {
+          problems.push(
+            `${page.rel}: hreflang is not reciprocal: ${alternate.pathname} does not list ${mine.hreflang} ${mine.pathname}`,
+          );
+          break;
+        }
+      }
+    }
+  }
+
+  if (inSitemap) {
+    for (const pathname of inSitemap) {
+      const page = pages.get(withSlash(pathname));
+      if (!page) problems.push(`sitemap: ${pathname} is not in the build`);
+    }
+  }
+  return problems;
+}
+
 /**
  * Check a build directory. Returns a list of problems (empty when clean).
  * Throws if the terms file is missing or empty.
@@ -224,6 +337,8 @@ export function checkOutput({ distDir, termsFile, reviewDir, srcDir }) {
 
     if (isHtml) checkHtml(raw, file, problems);
   }
+
+  problems.push(...checkSeo(distDir, files));
 
   if (srcDir) problems.push(...checkSourceImports(srcDir));
 
